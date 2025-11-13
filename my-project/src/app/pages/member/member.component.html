@@ -1,0 +1,466 @@
+<div class="min-h-screen bg-[#f4f4fb] text-slate-800 flex">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-[#4b3bcc] text-white flex flex-col">
+    <!-- Logo -->
+    <div class="px-6 py-5 flex items-center gap-3 border-b border-white/10">
+      <div
+        class="w-10 h-10 rounded-xl bg-white/20 grid place-items-center text-lg font-bold"
+      >
+        NT
+      </div>
+      <div>
+        <p class="font-semibold text-sm">Norsk Timeregistrering</p>
+        <p class="text-xs text-white/70">Admin panel</p>
+      </div>
+    </div>
+
+    <!-- Menu -->
+    <nav class="flex-1 px-3 py-4 text-sm space-y-1">
+      <a
+        class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10"
+        href="#"
+      >
+        <span>👤</span>
+        <span>Profile</span>
+      </a>
+
+      <a
+        class="flex items-center gap-3 px-3 py-2 rounded-lg bg-white text-[#4b3bcc]"
+        href="#"
+      >
+        <span>👥</span>
+        <span>Users</span>
+      </a>
+
+      <a
+        class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10"
+        href="#"
+      >
+        <span>🛠️</span>
+        <span>Control panel</span>
+      </a>
+
+      <a
+        class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10"
+        href="#"
+      >
+        <span>📁</span>
+        <span>Projects</span>
+      </a>
+
+      <a
+        class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10"
+        href="#"
+      >
+        <span>✅</span>
+        <span>Tasks</span>
+      </a>
+
+      <a
+        class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10"
+        href="#"
+      >
+        <span>📜</span>
+        <span>Logs</span>
+      </a>
+
+      <a
+        class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10"
+        href="#"
+      >
+        <span>💬</span>
+        <span>Group chats</span>
+      </a>
+
+      <a
+        class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10"
+        href="#"
+      >
+        <span>📊</span>
+        <span>Reports</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- MAIN AREA -->
+  <main class="flex-1 flex flex-col">
+
+    <!-- Top bar -->
+    <header
+      class="h-16 bg-white flex items-center justify-between px-6 border-b border-gray-200"
+    >
+      <!-- Search -->
+      <div class="flex-1 max-w-xl">
+        <div class="relative">
+          <span
+            class="absolute inset-y-0 left-3 flex items-center text-gray-400 text-sm"
+          >
+            🔍
+          </span>
+          <input
+            type="text"
+            placeholder="Search..."
+            class="w-full rounded-full bg-gray-100 pl-9 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+            [(ngModel)]="searchValue"
+          />
+        </div>
+      </div>
+
+      <!-- Right side info -->
+      <div class="flex items-center gap-8 ml-6 text-xs text-gray-500">
+        <div class="text-right">
+          <div class="font-semibold text-gray-700">Total members: {{ members().length }}</div>
+          <div>Current used: {{ filteredMembers().length }}</div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button
+            class="w-9 h-9 rounded-full bg-purple-100 grid place-items-center text-lg"
+          >
+            🔔
+          </button>
+          <div class="flex items-center gap-3">
+            <div class="text-right">
+              <p class="text-sm font-semibold">Luke Asote</p>
+              <p class="text-xs text-gray-400">Admin for Associations</p>
+            </div>
+            <div
+              class="w-10 h-10 rounded-full bg-purple-300 grid place-items-center text-white font-semibold"
+            >
+              L
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <section class="flex-1 px-6 py-5 space-y-4">
+
+      <!-- Tabs + Filter row -->
+      <div class="flex items-center justify-between">
+        <div class="flex flex-col gap-2">
+          <!-- Tabs -->
+          <div class="inline-flex rounded-full bg-white p-1 shadow-sm">
+            <button
+              class="px-4 py-1.5 text-xs font-medium rounded-full bg-purple-600 text-white"
+            >
+              Members
+            </button>
+            <button
+              class="px-4 py-1.5 text-xs font-medium rounded-full text-gray-500 hover:bg-gray-100"
+            >
+              Admins
+            </button>
+          </div>
+
+          <h1 class="text-xl font-semibold mt-1">Members</h1>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <!-- Status filter -->
+          <select
+            class="border border-gray-300 bg-white px-3 py-1.5 rounded-lg text-xs text-gray-600"
+            [ngModel]="statusFilter()"
+            (ngModelChange)="statusFilter.set($event)"
+          >
+            <option value="all">All status</option>
+            <option value="Active">Active only</option>
+            <option value="Inactive">Inactive only</option>
+          </select>
+
+          <!-- Filter button (dummy for now) -->
+          <button
+            type="button"
+            class="px-4 py-2 rounded-lg border border-purple-500 text-purple-600 text-xs font-medium hover:bg-purple-50"
+          >
+            Filter
+          </button>
+        </div>
+      </div>
+
+      <!-- Action buttons row -->
+      <div class="flex items-center gap-3">
+        <button
+          class="px-4 py-2 rounded-lg bg-purple-600 text-white text-sm font-medium hover:bg-purple-700"
+          (click)="openAdd()"
+        >
+          Add new
+        </button>
+
+        <button
+          class="px-4 py-2 rounded-lg bg-white text-gray-700 text-sm border border-gray-200 hover:bg-gray-50"
+          type="button"
+        >
+          Import members
+        </button>
+
+        <button
+          class="px-4 py-2 rounded-lg bg-white text-gray-700 text-sm border border-gray-200 hover:bg-gray-50"
+          type="button"
+        >
+          Export members (Excel)
+        </button>
+      </div>
+
+      <!-- Table -->
+      <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+        <table class="min-w-full text-sm">
+          <thead>
+            <tr class="bg-gray-50 text-left text-xs text-gray-500 border-b">
+              <th class="px-6 py-3 font-medium">Photo</th>
+              <th class="px-6 py-3 font-medium">Member name</th>
+              <th class="px-6 py-3 font-medium">Mobile</th>
+              <th class="px-6 py-3 font-medium">Email</th>
+              <th class="px-6 py-3 font-medium">Status</th>
+              <th class="px-6 py-3 font-medium">Operation</th>
+              <th class="px-6 py-3 font-medium text-right">Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr
+              *ngFor="let m of filteredMembers()"
+              class="border-b last:border-b-0 hover:bg-gray-50"
+            >
+              <td class="px-6 py-3">
+                <div class="w-9 h-9 rounded-full overflow-hidden bg-gray-200">
+                  <img
+                    *ngIf="m.photoUrl"
+                    [src]="m.photoUrl"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+              </td>
+              <td class="px-6 py-3">{{ m.name }}</td>
+              <td class="px-6 py-3">{{ m.mobile }}</td>
+              <td class="px-6 py-3">{{ m.email }}</td>
+              <td class="px-6 py-3">
+                <span
+                  [ngClass]="{
+                    'bg-green-100 text-green-700': m.status === 'Active',
+                    'bg-red-100 text-red-600': m.status === 'Inactive'
+                  }"
+                  class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium"
+                >
+                  {{ m.status }}
+                </span>
+              </td>
+
+              <!-- Operation icons -->
+              <td class="px-6 py-3">
+                <div class="flex items-center gap-3 text-purple-500 text-base">
+                  <button
+                    type="button"
+                    class="hover:text-purple-700"
+                    (click)="openEdit(m)"
+                    title="Edit"
+                  >
+                    ✏️
+                  </button>
+                  <button
+                    type="button"
+                    class="hover:text-red-500"
+                    (click)="deleteMember(m.id)"
+                    title="Delete"
+                  >
+                    🗑️
+                  </button>
+                </div>
+              </td>
+
+              <!-- Login button -->
+              <td class="px-6 py-3 text-right">
+                <button
+                  type="button"
+                  class="px-4 py-1.5 rounded-full text-xs font-medium border border-purple-500 text-purple-600 hover:bg-purple-50"
+                >
+                  Login
+                </button>
+              </td>
+            </tr>
+
+            <tr *ngIf="filteredMembers().length === 0">
+              <td colspan="7" class="px-6 py-6 text-center text-gray-500">
+                ไม่พบสมาชิกที่ตรงกับคำค้นหาหรือเงื่อนไข
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Modal -->
+<div
+  *ngIf="modalOpen()"
+  class="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
+  (click)="closeModal()"
+>
+  <div
+    class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md"
+    (click)="$event.stopPropagation()"
+  >
+    <h2 class="text-lg font-semibold mb-4">
+      {{ mode === 'add' ? 'Add Member' : 'Edit Member' }}
+    </h2>
+
+    <form
+      #memberForm="ngForm"
+      (ngSubmit)="onSubmit(memberForm)"
+      class="space-y-4"
+    >
+      <!-- รูป -->
+      <div class="flex items-center gap-4">
+        <div class="w-16 h-16 rounded-full overflow-hidden bg-gray-200">
+          <img
+            *ngIf="formMember.photoUrl"
+            [src]="formMember.photoUrl"
+            class="w-full h-full object-cover"
+          />
+        </div>
+        <input
+          type="file"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+          class="text-xs"
+        />
+      </div>
+
+      <!-- Name -->
+      <div>
+        <input
+          class="border px-3 py-2 w-full rounded-lg"
+          placeholder="Name *"
+          name="name"
+          required
+          minlength="2"
+          [(ngModel)]="formMember.name"
+          #nameCtrl="ngModel"
+          [ngClass]="{
+            'border-red-500':
+              nameCtrl.invalid && (nameCtrl.dirty || nameCtrl.touched)
+          }"
+        />
+        <p
+          *ngIf="
+            nameCtrl.invalid && (nameCtrl.dirty || nameCtrl.touched)
+          "
+          class="text-xs text-red-500 mt-1"
+        >
+          Name is required (min 2 characters)
+        </p>
+      </div>
+
+      <!-- Email -->
+      <div>
+        <input
+          class="border px-3 py-2 w-full rounded-lg"
+          placeholder="Email *"
+          name="email"
+          required
+          pattern="^[^@\s]+@[^@\s]*$"
+          [(ngModel)]="formMember.email"
+          #emailCtrl="ngModel"
+          [ngClass]="{
+            'border-red-500':
+              emailCtrl.invalid && (emailCtrl.dirty || emailCtrl.touched)
+          }"
+        />
+        <!-- required -->
+        <p
+          *ngIf="
+            emailCtrl.errors?.['required'] &&
+            (emailCtrl.dirty || emailCtrl.touched)
+          "
+          class="text-xs text-red-500 mt-1"
+        >
+          Email is required
+        </p>
+        <!-- ไม่มี @ -->
+        <p
+          *ngIf="
+            emailCtrl.errors?.['pattern'] &&
+            (emailCtrl.dirty || emailCtrl.touched)
+          "
+          class="text-xs text-red-500 mt-1"
+        >
+          Email must contain '&#64;'
+        </p>
+      </div>
+
+      <!-- Mobile -->
+      <div>
+        <input
+          class="border px-3 py-2 w-full rounded-lg"
+          placeholder="Mobile *"
+          name="mobile"
+          required
+          minlength="6"
+          [(ngModel)]="formMember.mobile"
+          #mobileCtrl="ngModel"
+          [ngClass]="{
+            'border-red-500':
+              mobileCtrl.invalid &&
+              (mobileCtrl.dirty || mobileCtrl.touched)
+          }"
+        />
+        <p
+          *ngIf="
+            mobileCtrl.invalid &&
+            (mobileCtrl.dirty || mobileCtrl.touched)
+          "
+          class="text-xs text-red-500 mt-1"
+        >
+          Mobile is required (min 6 characters)
+        </p>
+      </div>
+
+      <!-- Status -->
+      <div>
+        <select
+          class="border px-3 py-2 w-full rounded-lg"
+          name="status"
+          required
+          [(ngModel)]="formMember.status"
+          #statusCtrl="ngModel"
+          [ngClass]="{
+            'border-red-500':
+              statusCtrl.invalid &&
+              (statusCtrl.dirty || statusCtrl.touched)
+          }"
+        >
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+        <p
+          *ngIf="
+            statusCtrl.invalid &&
+            (statusCtrl.dirty || statusCtrl.touched)
+          "
+          class="text-xs text-red-500 mt-1"
+        >
+          Status is required
+        </p>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button
+          type="button"
+          class="px-4 py-2 border rounded-lg text-sm"
+          (click)="closeModal()"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="px-4 py-2 rounded-lg text-sm text-white bg-purple-600 hover:bg-purple-700"
+        >
+          Save
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

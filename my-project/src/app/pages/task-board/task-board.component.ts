@@ -2,12 +2,12 @@ import { Component, computed, inject } from '@angular/core';
 import { TaskBoardService } from '../../service/task-board.service';
 import { TaskCard, TaskStatus } from '../../model/kanban';
 import Swal from 'sweetalert2';
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { NgClass, NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-task-board',
   standalone: true,
-  imports: [NgFor, NgClass, NgIf],
+  imports: [NgFor, NgClass],
   templateUrl: './task-board.component.html',
   styleUrl: './task-board.component.css'
 })

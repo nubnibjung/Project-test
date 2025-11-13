@@ -10,14 +10,13 @@ import { OrderTableComponent } from './pages/order-table/order-table.component';
 import { ProductsComponent } from './pages/products/products.component';
 import { SetingsComponent } from './pages/setings/setings.component';
 import { TaskBoardComponent } from './pages/task-board/task-board.component';
+import { MemberComponent } from './pages/member/member.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-   
     BakeryComponent,
     LearnSkillComponent,
-    
     ProductsComponent,
     
   ],
@@ -28,6 +27,7 @@ import { TaskBoardComponent } from './pages/task-board/task-board.component';
     TaskBoardComponent,
     OrderTableComponent, 
     BurgerComponent,
+    MemberComponent
   ],
   providers: [
     provideClientHydration(withEventReplay())
