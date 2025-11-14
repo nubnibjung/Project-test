@@ -3,41 +3,49 @@
   <aside
     class="w-16 lg:w-20 bg-blue-700 text-white flex flex-col items-center py-6 space-y-6 rounded-r-3xl shadow-lg"
   >
-    <div class="w-10 h-10 rounded-2xl bg-white/10 grid place-items-center text-xl font-bold">
-      🚕
+    <div
+      class="w-10 h-10 rounded-2xl bg-white/10 grid place-items-center text-xl font-bold"
+    >
+      <i class="bi bi-taxi-front-fill"></i>
     </div>
 
     <nav class="flex flex-col items-center space-y-4 text-xl">
-      <button class="w-10 h-10 rounded-xl bg-white text-blue-600 grid place-items-center shadow">
-        🏠
+      <button
+        class="w-10 h-10 rounded-xl bg-white text-blue-600 grid place-items-center shadow"
+      >
+        <i class="bi bi-house-door-fill"></i>
       </button>
-      <button class="w-10 h-10 rounded-xl hover:bg-white/10 grid place-items-center">
-        ✈️
+      <button
+        class="w-10 h-10 rounded-xl hover:bg-white/10 grid place-items-center"
+      >
+        <i class="bi bi-airplane-fill"></i>
       </button>
-      <button class="w-10 h-10 rounded-xl hover:bg-white/10 grid place-items-center">
-        🛏️
+      <button
+        class="w-10 h-10 rounded-xl hover:bg-white/10 grid place-items-center"
+      >
+        <i class="bi bi-building-fill"></i>
       </button>
-      <button class="w-10 h-10 rounded-xl hover:bg-white/10 grid place-items-center">
-        🚗
+      <button
+        class="w-10 h-10 rounded-xl hover:bg-white/10 grid place-items-center"
+      >
+        <i class="bi bi-bus-front-fill"></i>
       </button>
     </nav>
 
     <div class="mt-auto">
       <button
         class="w-10 h-10 rounded-full bg-red-500 grid place-items-center shadow-lg"
+        (click)="onOpenBookingHistory()"
       >
-        🆘
+        <i class="bi bi-plus-lg text-white text-2xl"></i>
       </button>
     </div>
   </aside>
 
-  <!-- ========== MAIN CONTENT ========== -->
   <main class="flex-1 flex flex-col">
-    <!-- TOP BLUE BAR -->
     <header
       class="bg-gradient-to-r from-blue-700 to-blue-900 text-white px-6 lg:px-10 py-4 shadow-md"
     >
-      <!-- ช่วงค้นหาเมือง/วันเวลา -->
       <div class="flex flex-wrap gap-3 items-center">
         <div class="font-semibold text-lg flex items-center gap-2">
           <span class="hidden md:inline">Taxi Booking</span>
@@ -46,29 +54,108 @@
         <div
           class="flex-1 bg-white/10 rounded-2xl px-4 py-3 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 text-xs md:text-sm"
         >
+          <!-- TYPE -->
           <div class="flex flex-col text-white/70">
             <span class="uppercase text-[10px] tracking-wide">Type</span>
-            <span class="font-medium text-white">Outstation One-way</span>
+            <select
+              class="mt-1 bg-transparent text-white font-medium text-xs md:text-sm border border-white/20 rounded-lg px-2 py-1 focus:outline-none"
+              [(ngModel)]="tripType"
+            >
+              <option class="text-slate-800" value="Outstation One-way">
+                Outstation One-way
+              </option>
+              <option class="text-slate-800" value="Outstation Round-trip">
+                Outstation Round-trip
+              </option>
+              <option class="text-slate-800" value="Local">Local</option>
+            </select>
           </div>
+
+          <!-- FROM -->
+          <!-- <div class="flex flex-col text-white/70">
+        <span class="uppercase text-[10px] tracking-wide">From</span>
+        <input
+          type="text"
+          class="mt-1 bg-transparent text-white font-medium text-xs md:text-sm border border-white/20 rounded-lg px-2 py-1 focus:outline-none placeholder-white/50"
+          [(ngModel)]="fromCity"
+          placeholder="From city"
+        />
+      </div> -->
+          <!-- COUNTRY -->
+          <!-- COUNTRY -->
           <div class="flex flex-col text-white/70">
-            <span class="uppercase text-[10px] tracking-wide">From</span>
-            <span class="font-medium text-white">Mumbai</span>
+            <span class="uppercase text-[10px] tracking-wide">Country</span>
+            <select
+              class="mt-1 bg-transparent text-white font-medium text-xs md:text-sm border border-white/20 rounded-lg px-2 py-1 focus:outline-none"
+              [(ngModel)]="selectedCountry"
+            >
+              <option class="text-slate-800" value="All">All</option>
+              <option class="text-slate-800" value="India">India</option>
+              <option class="text-slate-800" value="Japan">Japan</option>
+              <option class="text-slate-800" value="Thailand">Thailand</option>
+            </select>
           </div>
+
+          <!-- TO -->
           <div class="flex flex-col text-white/70">
             <span class="uppercase text-[10px] tracking-wide">To</span>
-            <span class="font-medium text-white">Goa</span>
+            <input
+              type="text"
+              class="mt-1 bg-transparent text-white font-medium text-xs md:text-sm border border-white/20 rounded-lg px-2 py-1 focus:outline-none placeholder-white/50"
+              [(ngModel)]="toCity"
+              placeholder="To city"
+            />
           </div>
+
+          <!-- PICK-UP DATE -->
           <div class="flex flex-col text-white/70">
-            <span class="uppercase text-[10px] tracking-wide">Pick-up date</span>
-            <span class="font-medium text-white">Fri, 16 Oct 2020</span>
+            <span class="uppercase text-[10px] tracking-wide"
+              >Pick-up date</span
+            >
+            <input
+              type="date"
+              class="mt-1 bg-transparent text-white font-medium text-xs md:text-sm border border-white/20 rounded-lg px-2 py-1 focus:outline-none [color-scheme:dark]"
+              [(ngModel)]="pickupDate"
+            />
           </div>
+
+          <!-- PICK-UP TIME -->
+          <!-- PICK-UP TIME -->
           <div class="flex flex-col text-white/70">
-            <span class="uppercase text-[10px] tracking-wide">Pick-up time</span>
-            <span class="font-medium text-white">03:00 AM</span>
+            <span class="uppercase text-[10px] tracking-wide"
+              >Pick-up time</span
+            >
+
+            <select
+              class="mt-1 bg-transparent text-white font-medium text-xs md:text-sm border border-white/20 rounded-lg px-2 py-1 focus:outline-none"
+              [(ngModel)]="pickupTime"
+            >
+              <option class="text-slate-800" [ngValue]="''" disabled selected>
+                Select time
+              </option>
+
+              <option
+                *ngFor="let t of availableTimes"
+                class="text-slate-800"
+                [ngValue]="t"
+              >
+                {{ t }}
+              </option>
+            </select>
+
+            <p
+              *ngIf="availableTimes.length === 0"
+              class="mt-1 text-[10px] text-red-200"
+            >
+              No trips for this date / route.
+            </p>
           </div>
+
+          <!-- SEARCH BUTTON -->
           <div class="flex items-center justify-end">
             <button
               class="px-5 py-2 rounded-full bg-red-500 hover:bg-red-600 text-sm font-semibold shadow"
+              (click)="onSearchTrip()"
             >
               Search Flight
             </button>
@@ -88,9 +175,7 @@
     </header>
 
     <!-- CONTENT AREA -->
-    <section
-      class="flex-1 px-4 lg:px-10 py-6 flex flex-col lg:flex-row gap-6"
-    >
+    <section class="flex-1 px-4 lg:px-10 py-6 flex flex-col lg:flex-row gap-6">
       <!-- LEFT LIST -->
       <div class="flex-1 space-y-4">
         <!-- Header row: Taxi + tabs -->
@@ -110,8 +195,7 @@
             <button
               class="px-4 py-1 rounded-full"
               [ngClass]="{
-                'bg-blue-600 text-white shadow':
-                  selectedSort() === 'cheapest'
+                'bg-blue-600 text-white shadow': selectedSort() === 'cheapest'
               }"
               (click)="setSort('cheapest')"
             >
@@ -120,8 +204,7 @@
             <button
               class="px-4 py-1 rounded-full"
               [ngClass]="{
-                'bg-blue-600 text-white shadow':
-                  selectedSort() === 'best'
+                'bg-blue-600 text-white shadow': selectedSort() === 'best'
               }"
               (click)="setSort('best')"
             >
@@ -130,8 +213,7 @@
             <button
               class="px-4 py-1 rounded-full"
               [ngClass]="{
-                'bg-blue-600 text-white shadow':
-                  selectedSort() === 'quickest'
+                'bg-blue-600 text-white shadow': selectedSort() === 'quickest'
               }"
               (click)="setSort('quickest')"
             >
@@ -173,10 +255,22 @@
               </span>
             </div>
 
-            <div class="flex flex-wrap items-center gap-3 text-xs text-slate-400">
-              <span>🚗 Parking</span>
-              <span>👥 {{ taxi.seats }} Seat</span>
-              <span>❄️ AC</span>
+            <div
+              class="flex flex-wrap items-center gap-3 text-xs text-gray-400 text-slate-400"
+            >
+              <span>
+                <i class="bi bi-taxi-front-fill"></i>
+                Parking
+              </span>
+              <span>
+                <i class="bi bi-people-fill"></i>
+                {{ taxi.seats }}
+                Seat
+              </span>
+              <span>
+                <i class="bi bi-snow"></i>
+                AC
+              </span>
             </div>
 
             <div class="flex items-center gap-2 mt-2">
@@ -187,7 +281,7 @@
                 {{ taxi.discountPercent }}% off
               </span>
               <span class="text-xl font-bold text-slate-800">
-                {{ taxi.price | currency: 'USD' : 'symbol' : '1.0-0' }}
+                {{ taxi.price | currency : "USD" : "symbol" : "1.0-0" }}
               </span>
             </div>
           </div>
@@ -205,11 +299,13 @@
             <div class="flex gap-2">
               <button
                 class="px-4 py-2 border border-slate-200 rounded-full text-xs font-medium text-slate-600 hover:bg-slate-50"
+                (click)="onViewDetails(taxi)"
               >
                 View Details
               </button>
               <button
                 class="px-4 py-2 bg-blue-600 text-white rounded-full text-xs font-semibold shadow hover:bg-blue-700"
+                (click)="onBookNow(taxi)"
               >
                 Book Now
               </button>
@@ -219,9 +315,7 @@
       </div>
 
       <!-- RIGHT FILTER PANEL -->
-      <aside
-        class="w-full lg:w-80 bg-white rounded-2xl shadow-sm p-5 h-fit"
-      >
+      <aside class="w-full lg:w-80 bg-white rounded-2xl shadow-sm p-5 h-fit">
         <h2 class="font-semibold mb-4">Filters</h2>
 
         <!-- Price -->
@@ -231,12 +325,15 @@
             <span>+795</span>
           </div>
           <div class="flex items-center gap-2 text-xs text-slate-400 mb-2">
-            <span>{{ filter().minPrice | currency: 'USD' : 'symbol' : '1.0-0' }}</span>
+            <span>{{
+              filter().minPrice | currency : "USD" : "symbol" : "1.0-0"
+            }}</span>
             <span class="flex-1 h-px bg-slate-200"></span>
-            <span>{{ filter().maxPrice | currency: 'USD' : 'symbol' : '1.0-0' }}</span>
+            <span>{{
+              filter().maxPrice | currency : "USD" : "symbol" : "1.0-0"
+            }}</span>
           </div>
 
-          <!-- ใช้ range 2 ตัวแทน min/max -->
           <div class="flex gap-2">
             <input
               type="range"
@@ -261,16 +358,14 @@
 
         <!-- Seat -->
         <div class="mb-4">
-          <label class="block text-xs text-slate-400 mb-1">
-            Looking for
-          </label>
+          <label class="block text-xs text-slate-400 mb-1"> Looking for </label>
           <div class="relative">
             <select
               class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               [ngModel]="filter().seat"
               (ngModelChange)="onChangeSeat($event)"
             >
-              <option [ngValue]="undefined">Any seat</option>
+              <option [ngValue]="null">Any seat</option>
               <option [ngValue]="4">4 seat</option>
               <option [ngValue]="6">6 seat</option>
               <option [ngValue]="8">8 seat</option>
@@ -280,9 +375,7 @@
 
         <!-- Category -->
         <div class="mb-4">
-          <label class="block text-xs text-slate-400 mb-1">
-            Category
-          </label>
+          <label class="block text-xs text-slate-400 mb-1"> Category </label>
           <select
             class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             [ngModel]="filter().category"
