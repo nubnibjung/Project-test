@@ -198,7 +198,7 @@ addTask(status: TaskStatus, title: string, description: string) {
     comments: 0,
     attachments: 0,
     people: ['BS'],
-    time: this.formatCreatedTime(created),   // 👈 ใช้เวลาที่สร้าง
+    time: this.formatCreatedTime(created),   
     bg: this.statusToBg(status),
   };
 
@@ -206,14 +206,13 @@ addTask(status: TaskStatus, title: string, description: string) {
   this.saveToStorage();
 }
 
-  editTaskFull(taskId: number, updated: Partial<TaskCard>) {
+ editTaskFull(taskId: number, updated: Partial<TaskCard>) {
   this._tasks.update(list =>
     list.map(t => {
       if (t.id !== taskId) return t;
 
       const merged: TaskCard = { ...t, ...updated };
 
-      // ถ้ามีการเปลี่ยน status ให้เปลี่ยนสี bg ตามคอลัมน์ใหม่ด้วย
       if (updated.status) {
         merged.bg = this.statusToBg(updated.status);
       }
@@ -221,9 +220,8 @@ addTask(status: TaskStatus, title: string, description: string) {
       return merged;
     }),
   );
-  this.saveToStorage();
+  this.saveToStorage(); // 👈 ตรงนี้คือเขียนลง localStorage จริง ๆ
 }
-
 
   deleteTask(taskId: number) {
     this._tasks.update(list => list.filter(t => t.id !== taskId));

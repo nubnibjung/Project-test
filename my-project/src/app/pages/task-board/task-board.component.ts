@@ -2,16 +2,27 @@ import { Component, computed, inject } from '@angular/core';
 import { TaskBoardService } from '../../service/task-board.service';
 import { TaskCard, TaskStatus } from '../../model/kanban';
 import Swal from 'sweetalert2';
-import { NgClass, NgFor } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-task-board',
   standalone: true,
-  imports: [NgFor, NgClass],
+  imports: [NgFor, NgClass, NgIf, FormsModule],
   templateUrl: './task-board.component.html',
   styleUrl: './task-board.component.css'
 })
 export class TaskBoardComponent {
+   isEditOpen = false;
+  editingTaskId: number | null = null;
+
+  editTitle = '';
+  editDescription = '';
+  editTags = '';
+  editProgressPercent = 0;
+  editStatus: TaskStatus = 'todo';
+
+ 
  private readonly svc = inject(TaskBoardService);
   readonly columns = this.svc.columns;
   readonly totalTasks = this.svc.totalTasks;
@@ -55,63 +66,56 @@ export class TaskBoardComponent {
   }
 
   /** ดับเบิลคลิก / คลิกที่การ์ดเพื่อแก้ข้อมูล */
-  async onEditTask(task: TaskCard) {
-  const { value: form } = await Swal.fire({
-    title: 'Edit Task',
-    html: `
-      <div style="text-align:left">
-        <label style="font-size:12px;color:#555;">Title</label>
-        <input id="t-title" class="swal2-input" value="${task.title}">
-        
-        <label style="font-size:12px;color:#555;">Description</label>
-        <textarea id="t-desc" class="swal2-textarea">${task.description}</textarea>
-        
-        <label style="font-size:12px;color:#555;">Tags (comma separated)</label>
-        <input id="t-tags" class="swal2-input" value="${task.tags.join(', ')}">
-        
-        <label style="font-size:12px;color:#555;">Progress (%)</label>
-        <input id="t-prog" type="number" class="swal2-input" value="${task.progressPercent || 0}">
-        
-        <label style="font-size:12px;color:#555;">Status</label>
-        <select id="t-status" class="swal2-select">
-          <option value="todo" ${task.status === 'todo' ? 'selected' : ''}>Todo / New</option>
-          <option value="in-progress" ${task.status === 'in-progress' ? 'selected' : ''}>In Progress</option>
-          <option value="review" ${task.status === 'review' ? 'selected' : ''}>In Review</option>
-          <option value="done" ${task.status === 'done' ? 'selected' : ''}>Done</option>
-        </select>
-      </div>
-    `,
-    focusConfirm: false,
-    preConfirm: () => {
-      const title = (document.getElementById('t-title') as HTMLInputElement).value.trim();
-      const desc  = (document.getElementById('t-desc') as HTMLTextAreaElement).value.trim();
-      const tagsRaw = (document.getElementById('t-tags') as HTMLInputElement).value.trim();
-      const prog = Number((document.getElementById('t-prog') as HTMLInputElement).value);
-      const statusValue = (document.getElementById('t-status') as HTMLSelectElement).value as TaskStatus;
-      const time = (document.getElementById('t-time') as HTMLInputElement).value.trim();
+ openEditModal(task: TaskCard) {
+    this.isEditOpen = true;
+    this.editingTaskId = task.id;
 
-      if (!title) return Swal.showValidationMessage('Title required');
+    this.editTitle = task.title;
+    this.editDescription = task.description;
+    this.editTags = task.tags?.join(', ') ?? '';
+    this.editProgressPercent = task.progressPercent ?? 0;
+    this.editStatus = task.status;
+  }
 
-      return {
-        title,
-        description: desc,
-        tags: tagsRaw ? tagsRaw.split(',').map(t => t.trim()) : [],
-        progressPercent: Math.min(Math.max(prog, 0), 100),
-        status: statusValue,
-      } as Partial<TaskCard>;
-    },
-    confirmButtonText: 'Save changes',
-    showCancelButton: true,
+  closeEditModal() {
+    this.isEditOpen = false;
+    this.editingTaskId = null;
+  }
+
+ saveEditModal() {
+  if (!this.editingTaskId) return;
+
+  const title = this.editTitle.trim();
+  if (!title) {
+    Swal.fire('Title required', '', 'warning');
+    return;
+  }
+
+  const tags = this.editTags
+    .split(',')
+    .map(t => t.trim())
+    .filter(t => t.length > 0);
+
+  const progressPercent = Math.min(
+    Math.max(this.editProgressPercent || 0, 0),
+    100
+  );
+
+  this.svc.editTaskFull(this.editingTaskId, {
+    title,
+    description: this.editDescription,
+    tags,
+    progressPercent,
+    status: this.editStatus,
   });
 
-  if (form) {
-    this.svc.editTaskFull(task.id, form);
-    Swal.fire('Saved!', 'Task updated successfully.', 'success');
-  }
+  Swal.fire('Saved!', 'Task updated successfully.', 'success');
+
+  this.closeEditModal();
 }
 
   async onAdjustTaskMeta(task: TaskCard, event: MouseEvent) {
-    event.stopPropagation(); // กันไม่ให้ไปเปิด popup edit title/description
+    event.stopPropagation(); 
 
     const currentPercent = task.progressPercent ?? 0;
     const tagsString = task.tags?.join(', ') ?? '';
