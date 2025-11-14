@@ -1,0 +1,340 @@
+<div class="min-h-screen bg-slate-50 flex">
+  <!-- ========== LEFT SIDEBAR ========== -->
+  <aside
+    class="w-16 lg:w-20 bg-blue-700 text-white flex flex-col items-center py-6 space-y-6 rounded-r-3xl shadow-lg"
+  >
+    <div class="w-10 h-10 rounded-2xl bg-white/10 grid place-items-center text-xl font-bold">
+      🚕
+    </div>
+
+    <nav class="flex flex-col items-center space-y-4 text-xl">
+      <button class="w-10 h-10 rounded-xl bg-white text-blue-600 grid place-items-center shadow">
+        🏠
+      </button>
+      <button class="w-10 h-10 rounded-xl hover:bg-white/10 grid place-items-center">
+        ✈️
+      </button>
+      <button class="w-10 h-10 rounded-xl hover:bg-white/10 grid place-items-center">
+        🛏️
+      </button>
+      <button class="w-10 h-10 rounded-xl hover:bg-white/10 grid place-items-center">
+        🚗
+      </button>
+    </nav>
+
+    <div class="mt-auto">
+      <button
+        class="w-10 h-10 rounded-full bg-red-500 grid place-items-center shadow-lg"
+      >
+        🆘
+      </button>
+    </div>
+  </aside>
+
+  <!-- ========== MAIN CONTENT ========== -->
+  <main class="flex-1 flex flex-col">
+    <!-- TOP BLUE BAR -->
+    <header
+      class="bg-gradient-to-r from-blue-700 to-blue-900 text-white px-6 lg:px-10 py-4 shadow-md"
+    >
+      <!-- ช่วงค้นหาเมือง/วันเวลา -->
+      <div class="flex flex-wrap gap-3 items-center">
+        <div class="font-semibold text-lg flex items-center gap-2">
+          <span class="hidden md:inline">Taxi Booking</span>
+        </div>
+
+        <div
+          class="flex-1 bg-white/10 rounded-2xl px-4 py-3 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 text-xs md:text-sm"
+        >
+          <div class="flex flex-col text-white/70">
+            <span class="uppercase text-[10px] tracking-wide">Type</span>
+            <span class="font-medium text-white">Outstation One-way</span>
+          </div>
+          <div class="flex flex-col text-white/70">
+            <span class="uppercase text-[10px] tracking-wide">From</span>
+            <span class="font-medium text-white">Mumbai</span>
+          </div>
+          <div class="flex flex-col text-white/70">
+            <span class="uppercase text-[10px] tracking-wide">To</span>
+            <span class="font-medium text-white">Goa</span>
+          </div>
+          <div class="flex flex-col text-white/70">
+            <span class="uppercase text-[10px] tracking-wide">Pick-up date</span>
+            <span class="font-medium text-white">Fri, 16 Oct 2020</span>
+          </div>
+          <div class="flex flex-col text-white/70">
+            <span class="uppercase text-[10px] tracking-wide">Pick-up time</span>
+            <span class="font-medium text-white">03:00 AM</span>
+          </div>
+          <div class="flex items-center justify-end">
+            <button
+              class="px-5 py-2 rounded-full bg-red-500 hover:bg-red-600 text-sm font-semibold shadow"
+            >
+              Search Flight
+            </button>
+          </div>
+        </div>
+
+        <div class="hidden md:flex items-center gap-3 text-sm ml-auto">
+          <button class="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20">
+            Become a Partner
+          </button>
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full bg-white/20"></div>
+            <span>Mansurul Haque</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENT AREA -->
+    <section
+      class="flex-1 px-4 lg:px-10 py-6 flex flex-col lg:flex-row gap-6"
+    >
+      <!-- LEFT LIST -->
+      <div class="flex-1 space-y-4">
+        <!-- Header row: Taxi + tabs -->
+        <div
+          class="bg-white rounded-2xl shadow-sm px-5 py-3 flex flex-wrap items-center gap-4"
+        >
+          <div class="flex-1">
+            <div class="font-semibold">Taxi</div>
+            <div class="text-xs text-slate-400">
+              {{ totalText() }}
+            </div>
+          </div>
+
+          <div
+            class="flex rounded-full bg-slate-100 p-1 text-xs md:text-sm font-medium"
+          >
+            <button
+              class="px-4 py-1 rounded-full"
+              [ngClass]="{
+                'bg-blue-600 text-white shadow':
+                  selectedSort() === 'cheapest'
+              }"
+              (click)="setSort('cheapest')"
+            >
+              Cheapest
+            </button>
+            <button
+              class="px-4 py-1 rounded-full"
+              [ngClass]="{
+                'bg-blue-600 text-white shadow':
+                  selectedSort() === 'best'
+              }"
+              (click)="setSort('best')"
+            >
+              Best
+            </button>
+            <button
+              class="px-4 py-1 rounded-full"
+              [ngClass]="{
+                'bg-blue-600 text-white shadow':
+                  selectedSort() === 'quickest'
+              }"
+              (click)="setSort('quickest')"
+            >
+              Quickest
+            </button>
+          </div>
+        </div>
+
+        <!-- Loading / Error -->
+        <div *ngIf="isLoading()" class="text-center text-slate-500 py-6">
+          Loading taxis...
+        </div>
+        <div *ngIf="error()" class="text-center text-red-500 py-6">
+          {{ error() }}
+        </div>
+
+        <!-- Taxi cards -->
+        <div
+          *ngFor="let taxi of taxis()"
+          class="bg-white rounded-2xl shadow-sm flex flex-col md:flex-row gap-4 px-5 py-4 items-center"
+        >
+          <!-- car image -->
+          <div class="w-full md:w-52">
+            <img
+              [src]="taxi.imageUrl"
+              alt="car"
+              class="w-full h-32 md:h-28 object-cover rounded-xl"
+            />
+          </div>
+
+          <!-- info -->
+          <div class="flex-1 flex flex-col gap-1">
+            <div class="flex items-center gap-2">
+              <h3 class="font-semibold text-slate-800">
+                {{ taxi.name }}
+              </h3>
+              <span class="text-xs text-slate-400">
+                {{ taxi.type }}
+              </span>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3 text-xs text-slate-400">
+              <span>🚗 Parking</span>
+              <span>👥 {{ taxi.seats }} Seat</span>
+              <span>❄️ AC</span>
+            </div>
+
+            <div class="flex items-center gap-2 mt-2">
+              <span
+                *ngIf="taxi.discountPercent"
+                class="text-xs font-semibold text-orange-500"
+              >
+                {{ taxi.discountPercent }}% off
+              </span>
+              <span class="text-xl font-bold text-slate-800">
+                {{ taxi.price | currency: 'USD' : 'symbol' : '1.0-0' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- right action -->
+          <div class="flex flex-col items-end gap-3 ml-auto">
+            <!-- rating pill -->
+            <div
+              class="flex items-center gap-1 bg-blue-600 text-white text-xs px-3 py-1 rounded-full"
+            >
+              <span>{{ taxi.rating }}</span>
+              <span>★</span>
+            </div>
+
+            <div class="flex gap-2">
+              <button
+                class="px-4 py-2 border border-slate-200 rounded-full text-xs font-medium text-slate-600 hover:bg-slate-50"
+              >
+                View Details
+              </button>
+              <button
+                class="px-4 py-2 bg-blue-600 text-white rounded-full text-xs font-semibold shadow hover:bg-blue-700"
+              >
+                Book Now
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT FILTER PANEL -->
+      <aside
+        class="w-full lg:w-80 bg-white rounded-2xl shadow-sm p-5 h-fit"
+      >
+        <h2 class="font-semibold mb-4">Filters</h2>
+
+        <!-- Price -->
+        <div class="mb-5">
+          <div class="flex justify-between text-xs text-slate-400 mb-1">
+            <span>Price</span>
+            <span>+795</span>
+          </div>
+          <div class="flex items-center gap-2 text-xs text-slate-400 mb-2">
+            <span>{{ filter().minPrice | currency: 'USD' : 'symbol' : '1.0-0' }}</span>
+            <span class="flex-1 h-px bg-slate-200"></span>
+            <span>{{ filter().maxPrice | currency: 'USD' : 'symbol' : '1.0-0' }}</span>
+          </div>
+
+          <!-- ใช้ range 2 ตัวแทน min/max -->
+          <div class="flex gap-2">
+            <input
+              type="range"
+              min="0"
+              max="800"
+              step="10"
+              [value]="filter().minPrice"
+              (input)="onChangePriceRange($event, 'minPrice')"
+              class="w-1/2 accent-blue-600"
+            />
+            <input
+              type="range"
+              min="0"
+              max="800"
+              step="10"
+              [value]="filter().maxPrice"
+              (input)="onChangePriceRange($event, 'maxPrice')"
+              class="w-1/2 accent-blue-600"
+            />
+          </div>
+        </div>
+
+        <!-- Seat -->
+        <div class="mb-4">
+          <label class="block text-xs text-slate-400 mb-1">
+            Looking for
+          </label>
+          <div class="relative">
+            <select
+              class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              [ngModel]="filter().seat"
+              (ngModelChange)="onChangeSeat($event)"
+            >
+              <option [ngValue]="undefined">Any seat</option>
+              <option [ngValue]="4">4 seat</option>
+              <option [ngValue]="6">6 seat</option>
+              <option [ngValue]="8">8 seat</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Category -->
+        <div class="mb-4">
+          <label class="block text-xs text-slate-400 mb-1">
+            Category
+          </label>
+          <select
+            class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            [ngModel]="filter().category"
+            (ngModelChange)="onChangeCategory($event)"
+          >
+            <option value="All">All</option>
+            <option value="Branded">Branded</option>
+            <option value="Non-branded">Non Branded</option>
+          </select>
+        </div>
+
+        <!-- Popular filters -->
+        <div class="mb-3">
+          <div class="text-xs text-slate-400 mb-1">Popular Filters</div>
+          <div class="space-y-1 text-sm">
+            <label class="flex items-center gap-2">
+              <input
+                type="checkbox"
+                class="accent-blue-600"
+                [checked]="filter().ac"
+                (change)="toggleFilterFlag('ac')"
+              />
+              <span>AC</span>
+            </label>
+            <label class="flex items-center gap-2">
+              <input
+                type="checkbox"
+                class="accent-blue-600"
+                [checked]="filter().newCar"
+                (change)="toggleFilterFlag('newCar')"
+              />
+              <span>New Car</span>
+            </label>
+            <label class="flex items-center gap-2">
+              <input
+                type="checkbox"
+                class="accent-blue-600"
+                [checked]="filter().nonStop"
+                (change)="toggleFilterFlag('nonStop')"
+              />
+              <span>Non Stop</span>
+            </label>
+          </div>
+        </div>
+
+        <button
+          class="mt-4 text-xs text-blue-600 font-medium flex items-center gap-1"
+        >
+          More
+          <span>▾</span>
+        </button>
+      </aside>
+    </section>
+  </main>
+</div>
