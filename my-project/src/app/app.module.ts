@@ -13,14 +13,13 @@ import { TaskBoardComponent } from './pages/task-board/task-board.component';
 import { TaxiComponent } from './pages/taxi/taxi.component';
 
 import { FormsModule } from '@angular/forms';   
+import { MemberComponent } from './pages/member/member.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-   
     BakeryComponent,
     LearnSkillComponent,
-    
     ProductsComponent,
           TaxiComponent,
     
@@ -33,6 +32,7 @@ import { FormsModule } from '@angular/forms';
     OrderTableComponent, 
     BurgerComponent,
     FormsModule,
+    MemberComponent
   ],
   providers: [
     provideClientHydration(withEventReplay())

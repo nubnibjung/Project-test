@@ -28,6 +28,11 @@ const routes: Routes = [
     loadComponent: () =>
       import('./pages/task-board/task-board.component').then(m => m.TaskBoardComponent)
   },
+  {
+    path: 'member',
+    loadComponent: () =>
+      import('./pages/member/member.component').then(m => m.MemberComponent)
+  },
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
