@@ -14,7 +14,6 @@ import { Taxi, TaxiBooking } from '../../model/taxi-booking';
 export class TaxiComponent implements OnInit {
   private readonly taxiSvc = inject(TaxiService);
   showBookingPanel = false;
-  selectedCountry = 'Thailand';
   selectedTaxi: Taxi | null = null;
 
   readonly taxis = this.taxiSvc.filteredTaxis;
@@ -26,6 +25,7 @@ export class TaxiComponent implements OnInit {
   readonly brands = this.taxiSvc.brands;
 
   // ===== HEADER STATE =====
+  selectedCountry = 'Thailand'; 
   fromCity = 'Bangkok'; // fix route: Bangkok -> [Chiang Mai / Phuket / Khon Kaen]
   toCity = '';
   pickupDate = '';
@@ -127,42 +127,42 @@ export class TaxiComponent implements OnInit {
       icon: 'success',
     });
   }
-  get availableDates(): string[] {
-    const taxis: Taxi[] = this.taxiSvc.allTaxis();
-    const country = this.selectedCountry;
-    const from = this.fromCity.trim().toLowerCase();
-    const to = this.toCity.trim().toLowerCase();
+get availableDates(): string[] {
+  const taxis: Taxi[] = this.taxiSvc.allTaxis();
 
-    const filtered = taxis.filter(
-      (t) =>
-        (!country || t.country === country) &&
-        (!from || t.from.toLowerCase() === from) &&
-        (!to || t.to.toLowerCase() === to)
-    );
+  const country = this.selectedCountry === 'All' ? '' : this.selectedCountry;
+  const from = this.fromCity.trim().toLowerCase();
+  const to = this.toCity.trim().toLowerCase();
 
-    const unique = Array.from(new Set(filtered.map((t) => t.departureDate)));
-    return unique.sort();
-  }
+  const filtered = taxis.filter(
+    (t) =>
+      (!country || t.country === country) &&
+      (!from || t.from.toLowerCase() === from) &&
+      (!to || t.to.toLowerCase() === to)
+  );
+
+  const unique = Array.from(new Set(filtered.map((t) => t.departureDate)));
+  return unique.sort();
+}
+
 
 get availableTimes(): string[] {
-  // 1) ข้อมูลดิบ
   const taxis: Taxi[] = this.taxiSvc.allTaxis();
-  const f = this.filter();          // signal -> ดึงค่าปัจจุบันของ filter
-  const bookings = this.bookings(); // signal -> list booking ปัจจุบัน
+  const f = this.filter();
+  const bookings = this.bookings();
 
-  const country = this.selectedCountry;
+  const countryRaw = this.selectedCountry;
+  const country = countryRaw === 'All' ? '' : countryRaw;
+
   const from = this.fromCity.trim().toLowerCase();
   const to = this.toCity.trim().toLowerCase();
   const date = this.pickupDate;
 
-  // 2) filter ตาม route + filter panel (seat/brand/AC/... ทั้งหมด)
   const filtered = taxis.filter(t =>
     (!country || t.country === country) &&
     (!from || t.from.toLowerCase() === from) &&
     (!to   || t.to.toLowerCase()   === to) &&
     (!date || t.departureDate === date) &&
-
-    // filter จาก sidebar
     t.price >= f.minPrice &&
     t.price <= f.maxPrice &&
     (!f.seat     || t.seats === f.seat) &&
@@ -171,6 +171,7 @@ get availableTimes(): string[] {
     (!f.nonStop  || t.nonStop) &&
     (!f.brand    || f.brand === 'All' || t.brand === f.brand)
   );
+
 
   // 3) booking ที่ชน route + date เดียวกัน (ไว้เช็กว่ารถเต็มหรือยัง)
   const bookingsSameRouteDate = bookings.filter(b =>
@@ -200,40 +201,69 @@ get availableTimes(): string[] {
 }
 
 
-  onSearchTrip() {
-    if (
-      !this.selectedCountry ||
-      !this.fromCity ||
-      !this.toCity ||
-      !this.pickupDate ||
-      !this.pickupTime
-    ) {
-      Swal.fire({
-        title: 'Missing information',
-        text: 'Please select country, from, destination, date and time.',
-        icon: 'warning',
-      });
-      return;
-    }
+ onSearchTrip() {
+  // 1) เช็กกรณี "All" = ไม่เลือกอะไรเลย
+  const isAllSearch =
+    (this.selectedCountry === 'All' || !this.selectedCountry) &&
+    !this.fromCity &&
+    !this.toCity &&
+    !this.pickupDate &&
+    !this.pickupTime;
 
-    this.taxiSvc.setTripSearch({
-      date: this.pickupDate,
-      time: this.pickupTime,
-      from: this.fromCity,
-      to: this.toCity,
-      country: this.selectedCountry,
-    });
-
+  // ถ้าเป็นการค้นหาทั้งหมด → เคลียร์ tripSearch แล้วแสดงทุกคัน
+  if (isAllSearch) {
+    this.taxiSvc.setTripSearch(null);   // แปลว่าไม่ filter ตาม trip เลย
     this.resetPage();
 
     Swal.fire({
       title: 'Trips filtered',
-      text: `Showing taxis from Bangkok to ${this.toCity} on ${this.pickupDate} at ${this.pickupTime}.`,
+      text: 'Showing all available taxis.',
       icon: 'info',
       timer: 1500,
       showConfirmButton: false,
     });
+    return;
   }
+
+  // 2) ถ้าไม่ใช่ All แต่กรอกไม่ครบ → ให้เตือนเหมือนเดิม
+  if (
+    !this.selectedCountry ||
+    !this.fromCity ||
+    !this.toCity ||
+    !this.pickupDate ||
+    !this.pickupTime
+  ) {
+    Swal.fire({
+      title: 'Missing information',
+      text: 'Please select country, from, destination, date and time.',
+      icon: 'warning',
+    });
+    return;
+  }
+
+  // 3) กรณีกรอกครบทุกช่อง → filter ตามค่าที่เลือก
+  const country =
+    this.selectedCountry === 'All' ? undefined : this.selectedCountry;
+
+  this.taxiSvc.setTripSearch({
+    date: this.pickupDate,
+    time: this.pickupTime,
+    from: this.fromCity,
+    to: this.toCity,
+    country,
+  });
+
+  this.resetPage();
+
+  Swal.fire({
+    title: 'Trips filtered',
+    text: `Showing taxis from ${this.fromCity} to ${this.toCity} on ${this.pickupDate} at ${this.pickupTime}.`,
+    icon: 'info',
+    timer: 1500,
+    showConfirmButton: false,
+  });
+}
+
 
 
   onChangeSeat(seat: any) {
@@ -303,6 +333,27 @@ get availableTimes(): string[] {
       });
     }
   }
+async onDeleteBooking(id: number) {
+  const result = await Swal.fire({
+    title: 'Delete booking?',
+    text: 'Are you sure you want to delete this booking?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Delete',
+  });
+
+  if (result.isConfirmed) {
+    const res = this.taxiSvc.cancelBooking(id);
+
+    if (res.ok) {
+      Swal.fire({
+        title: 'Deleted',
+        text: 'Your booking has been removed.',
+        icon: 'success'
+      });
+    }
+  }
+}
 
   onOpenBookingHistory() {
     this.showBookingPanel = true;
@@ -311,4 +362,6 @@ get availableTimes(): string[] {
   onCloseBookingPanel() {
     this.showBookingPanel = false;
   }
+
+  
 }

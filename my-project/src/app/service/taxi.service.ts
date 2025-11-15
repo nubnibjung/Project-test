@@ -10,7 +10,6 @@ const BOOKING_STORAGE_KEY = 'taxi_bookings_v1';
 @Injectable({ providedIn: 'root' })
 export class TaxiService {
 private readonly mockTaxis: Taxi[] = [
-  // ===== Chiang Mai =====
   {
     id: 1,
     name: 'Toyota Corolla ',
@@ -493,15 +492,20 @@ readonly filteredTaxis = computed(() => {
   const trip = this._tripSearch();
   const bookings = this._bookings();
 
-  let result = taxis.filter(
-    t =>
-      t.price >= f.minPrice &&
-      t.price <= f.maxPrice &&
-      (!f.seat || t.seats === f.seat) &&
-      (!f.ac || t.hasAC) &&
-      (!f.newCar || t.isNewCar) &&
-      (!f.nonStop || t.nonStop)
-  );
+ let result = taxis.filter(
+  t =>
+    t.price >= f.minPrice &&
+    t.price <= f.maxPrice &&
+    (!f.seat || t.seats === f.seat) &&
+    (!f.ac || t.hasAC) &&
+    (!f.newCar || t.isNewCar) &&
+    (!f.nonStop || t.nonStop) &&
+    (
+      !f.brand ||                
+      f.brand === 'All' ||       
+      t.brand === f.brand        
+    )
+);
 
   if (trip) {
     const tripCountry = (trip.country ?? 'All').toLowerCase();
@@ -589,14 +593,9 @@ readonly filteredTaxis = computed(() => {
     this._tripSearch.set(trip);
   }
 
-  createBooking(
+ createBooking(
   taxi: Taxi,
-  payload: {
-    pickupDate: string;
-    pickupTime: string;
-    from: string;
-    to: string;
-  }
+  payload: { pickupDate: string; pickupTime: string; from: string; to: string }
 ): TaxiBooking {
   const current = this._bookings();
   const newBooking: TaxiBooking = {
@@ -610,7 +609,7 @@ readonly filteredTaxis = computed(() => {
     from: payload.from,
     to: payload.to,
     createdAt: new Date().toISOString(),
-    status: 'active',           // 🆕 ใส่สถานะเริ่มต้น
+    status: 'active',                
   };
 
   this._bookings.set([...current, newBooking]);
@@ -618,52 +617,39 @@ readonly filteredTaxis = computed(() => {
   return newBooking;
 }
 
+
   clearAllBookings() {
     this._bookings.set([]);
     this.saveBookingsToStorage();
   }
   private getPickupDateTime(b: TaxiBooking): Date {
-  // รูปแบบ '2020-10-16T08:00:00'
   return new Date(`${b.pickupDate}T${b.pickupTime}:00`);
 }
 canCancelBooking(b: TaxiBooking): boolean {
-  if (b.status !== 'active') return false;
-
+  const status = b.status ?? 'active';
+  if (status !== 'active') return false;
   const pickup = this.getPickupDateTime(b);
   const now = new Date();
-
   const diffMs = pickup.getTime() - now.getTime();
   const twoHoursMs = 2 * 60 * 60 * 1000;
-
-  return diffMs > twoHoursMs;   // true = เหลือมากกว่า 2 ชม.
+  return diffMs >= twoHoursMs;   
 }
 cancelBooking(id: number): { ok: boolean; reason?: string } {
   const list = this._bookings();
   const idx = list.findIndex((b) => b.id === id);
+
   if (idx === -1) {
     return { ok: false, reason: 'Booking not found' };
   }
 
-  const booking = list[idx];
-
-  if (!this.canCancelBooking(booking)) {
-    return { ok: false, reason: 'Cannot cancel less than 2 hours before pickup or already cancelled.' };
-  }
-
-  const updated: TaxiBooking = {
-    ...booking,
-    status: 'cancelled',
-    cancelledAt: new Date().toISOString(),
-  };
-
-  const newList = [...list];
-  newList[idx] = updated;
+  const newList = list.filter((b) => b.id !== id);
 
   this._bookings.set(newList);
   this.saveBookingsToStorage();
 
   return { ok: true };
 }
+
 
 
 }

@@ -62,9 +62,15 @@
               [(ngModel)]="selectedCountry"
               (ngModelChange)="onCountryChange($event)"
             >
+              <!-- เลือกทุกประเทศ -->
+              <option class="text-slate-800" [ngValue]="'All'">
+                All countries
+              </option>
+              <!-- ประเทศจริง -->
               <option class="text-slate-800" value="Thailand">Thailand</option>
             </select>
           </div>
+
           <!-- FROM: กรุงเทพฯ อย่างเดียว -->
           <div class="flex flex-col text-white/70">
             <span class="uppercase text-[10px] tracking-wide">From</span>
@@ -73,12 +79,13 @@
               [(ngModel)]="fromCity"
               (ngModelChange)="onFromChange($event)"
             >
-              <option class="text-slate-800" [ngValue]="''" disabled>
-                Select from
+              <option class="text-slate-800" [ngValue]="''">
+                All departure cities
               </option>
               <option class="text-slate-800" value="Bangkok">Bangkok</option>
             </select>
           </div>
+
           <!-- TO: จังหวัดในไทย 3 ที่ -->
           <div class="flex flex-col text-white/70">
             <span class="uppercase text-[10px] tracking-wide">To</span>
@@ -87,8 +94,8 @@
               [(ngModel)]="toCity"
               (ngModelChange)="onToChange($event)"
             >
-              <option class="text-slate-800" [ngValue]="''" disabled>
-                Select city
+              <option class="text-slate-800" [ngValue]="''">
+                All destinations
               </option>
               <option class="text-slate-800" value="Chiang Mai">
                 Chiang Mai
@@ -109,9 +116,7 @@
               class="mt-1 bg-transparent text-white font-medium text-xs md:text-sm border border-white/20 rounded-lg px-2 py-1 focus:outline-none"
               [(ngModel)]="pickupDate"
             >
-              <option class="text-slate-800" [ngValue]="''" disabled>
-                Select date
-              </option>
+              <option class="text-slate-800" [ngValue]="''">All dates</option>
               <option
                 *ngFor="let d of availableDates"
                 class="text-slate-800"
@@ -138,9 +143,7 @@
               class="mt-1 bg-transparent text-white font-medium text-xs md:text-sm border border-white/20 rounded-lg px-2 py-1 focus:outline-none"
               [(ngModel)]="pickupTime"
             >
-              <option class="text-slate-800" [ngValue]="''" disabled>
-                Select time
-              </option>
+              <option class="text-slate-800" [ngValue]="''">All times</option>
               <option
                 *ngFor="let t of availableTimes"
                 class="text-slate-800"
@@ -186,90 +189,170 @@
       </div>
     </header>
 
-    <!-- BOOKING HISTORY PANEL -->
-    <!-- BOOKING HISTORY MODAL (ของจริง) -->
-<div
-  *ngIf="showBookingPanel"
-  class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50"
->
-  <div class="bg-white rounded-2xl shadow-xl max-w-md w-full mx-4 overflow-hidden">
-    <!-- Header -->
-    <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100">
-      <h2 class="text-sm font-semibold text-slate-800">
-        Booking History
-      </h2>
-      <button
-        class="text-slate-400 hover:text-slate-700 text-lg"
-        (click)="onCloseBookingPanel()"
+    <div
+      *ngIf="showBookingPanel"
+      class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50"
+    >
+      <div
+        class="bg-white rounded-2xl shadow-xl max-w-md w-full mx-4 overflow-hidden"
       >
-        ✕
-      </button>
-    </div>
-
-    <!-- Body -->
-    <div class="p-4 max-h-[70vh] overflow-y-auto">
-      <ng-container *ngIf="bookings().length; else emptyHistory">
         <div
-          *ngFor="let b of bookings()"
-          class="mb-3 last:mb-0 border border-slate-100 rounded-xl overflow-hidden"
+          class="flex items-center justify-between px-4 py-3 border-b border-slate-100"
         >
-          <!-- header booking -->
-          <div class="px-4 pt-3 pb-2 bg-slate-50 text-xs">
-            <div class="flex justify-between items-start">
-              <div>
-                <div class="font-semibold text-slate-800">
-                  TRIP-{{ b.id | number:'5.0-0' }}
-                </div>
-                <div class="text-[11px] text-slate-400">
-                  {{ b.createdAt | date:'dd/MM/yyyy, HH:mm:ss' }}
-                </div>
-              </div>
-              <button
-                class="text-rose-400 hover:text-rose-500 text-lg"
-                (click)="onCancelBooking(b)"
-                [disabled]="!canCancel(b)"
-                [ngClass]="{'opacity-40 cursor-not-allowed': !canCancel(b)}"
-              >
-                🗑
-              </button>
-            </div>
-          </div>
-
-          <!-- detail line -->
-          <div class="px-4 py-3 flex items-start gap-3 text-xs">
-            <div class="w-9 h-9 rounded-lg bg-slate-100 grid place-items-center text-lg">
-              🚕
-            </div>
-            <div class="flex-1">
-              <div class="font-medium text-slate-800 text-sm">
-                {{ b.taxiName }}
-              </div>
-              <div class="text-slate-500">
-                From <b>{{ b.from }}</b> → <b>{{ b.to }}</b>
-              </div>
-              <div class="text-slate-500">
-                Pickup: <b>{{ b.pickupDate }}</b> · <b>{{ b.pickupTime }}</b>
-              </div>
-            </div>
-            <div class="text-right">
-              <div class="text-slate-400">Fare</div>
-              <div class="font-semibold text-slate-800">
-                ${{ b.price }}
-              </div>
-            </div>
-          </div>
+          <h2 class="text-sm font-semibold text-slate-800">Booking History</h2>
+          <button
+            class="text-slate-400 hover:text-slate-700 text-lg"
+            (click)="onCloseBookingPanel()"
+          >
+            <i class="bi bi-x-lg"></i>
+          </button>
         </div>
-      </ng-container>
 
-      <ng-template #emptyHistory>
-        <div class="py-6 text-center text-xs text-slate-400">
-          ไม่มีประวัติการจองรถในตอนนี้
+        <div class="p-4 max-h-[70vh] overflow-y-auto">
+          <ng-container *ngIf="bookings().length; else emptyHistory">
+            <div
+              *ngFor="let b of bookings()"
+              class="mb-3 last:mb-0 border border-slate-100 rounded-xl overflow-hidden"
+            >
+              <div class="px-4 pt-3 pb-2 bg-slate-50 text-xs">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <div class="font-semibold text-slate-800">
+                      TRIP-{{ b.id | number : "5.0-0" }}
+                    </div>
+                    <div class="text-[11px] text-slate-400">
+                      {{ b.createdAt | date : "dd/MM/yyyy, HH:mm:ss" }}
+                    </div>
+                  </div>
+                  <button
+                    (click)="onDeleteBooking(b.id)"
+                    class="px-2 py-1 text-red-400 rounded"
+                  >
+                    <i class="bi bi-trash-fill text-xs"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- detail line -->
+              <div class="px-4 py-3 flex items-start gap-3 text-xs">
+                <div
+                  class="w-9 h-9 rounded-lg bg-slate-100 grid place-items-center text-lg"
+                >
+                  <i class="bi bi-taxi-front-fill"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="font-medium text-slate-800 text-sm">
+                    {{ b.taxiName }}
+                  </div>
+                  <div class="text-slate-500">
+                    From <b>{{ b.from }}</b> → <b>{{ b.to }}</b>
+                  </div>
+                  <div class="text-slate-500">
+                    Pickup: <b>{{ b.pickupDate }}</b> ·
+                    <b>{{ b.pickupTime }}</b>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="text-slate-400">Fare</div>
+                  <div class="font-semibold text-slate-800">${{ b.price }}</div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-template #emptyHistory>
+            <div class="py-6 text-center text-xs text-slate-400">
+              ไม่มีประวัติการจองรถในตอนนี้
+            </div>
+          </ng-template>
         </div>
-      </ng-template>
+      </div>
     </div>
-  </div>
-</div>
 
+    <!-- ======= TAXI DETAILS MODAL ======= -->
+    <div
+      *ngIf="selectedTaxi"
+      class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50"
+    >
+      <div
+        class="bg-white rounded-2xl shadow-xl max-w-md w-full mx-4 overflow-hidden"
+      >
+        <div
+          class="flex items-center justify-between px-4 py-3 border-b border-slate-100"
+        >
+          <h2 class="text-sm font-semibold text-slate-800">
+            {{ selectedTaxi?.name }}
+          </h2>
+          <button
+            class="text-slate-400 hover:text-slate-700 text-lg"
+            (click)="closeDetails()"
+          >
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+
+        <div class="p-4 space-y-4 text-sm">
+          <div class="w-full">
+            <img
+              [src]="selectedTaxi?.imageUrl"
+              [alt]="selectedTaxi?.name"
+              class="w-full h-40 object-cover rounded-xl"
+            />
+          </div>
+
+          <div class="space-y-1">
+            <p>
+              <span class="font-semibold">Brand:</span>
+              {{ selectedTaxi?.brand }}
+            </p>
+            <p>
+              <span class="font-semibold">Type:</span>
+              {{ selectedTaxi?.type }}
+            </p>
+            <p>
+              <span class="font-semibold">Seats:</span>
+              {{ selectedTaxi?.seats }}
+            </p>
+            <p>
+              <span class="font-semibold">Price:</span>
+              {{ selectedTaxi?.price | currency : "USD" : "symbol" : "1.0-0" }}
+            </p>
+            <p>
+              <span class="font-semibold">AC:</span>
+              {{ selectedTaxi?.hasAC ? "Yes" : "No" }}
+            </p>
+            <p>
+              <span class="font-semibold">Non stop:</span>
+              {{ selectedTaxi?.nonStop ? "Yes" : "No" }}
+            </p>
+            <p>
+              <span class="font-semibold">Route:</span>
+              {{ selectedTaxi?.from }} → {{ selectedTaxi?.to }}
+            </p>
+            <p>
+              <span class="font-semibold">Pickup:</span>
+              {{ selectedTaxi?.departureDate }} ·
+              {{ selectedTaxi?.departureTime }}
+            </p>
+          </div>
+
+          <div class="flex justify-end gap-2 pt-2">
+            <button
+              class="px-4 py-2 border border-slate-200 rounded-full text-xs font-medium text-slate-600 hover:bg-slate-50"
+              (click)="closeDetails()"
+            >
+              Close
+            </button>
+            <button
+              class="px-4 py-2 bg-blue-600 text-white rounded-full text-xs font-semibold shadow hover:bg-blue-700"
+              (click)="onBookNow(selectedTaxi)"
+            >
+              Book Now
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- CONTENT AREA -->
     <section class="flex-1 px-4 lg:px-10 py-6 flex flex-col lg:flex-row gap-6">
@@ -508,7 +591,7 @@
             (ngModelChange)="onChangeBrand($event)"
           >
             <option *ngFor="let b of brands()" [ngValue]="b">
-              {{ b === 'All' ? 'All Brands' : b }}
+              {{ b === "All" ? "All Brands" : b }}
             </option>
           </select>
         </div>
