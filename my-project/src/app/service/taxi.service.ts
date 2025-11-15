@@ -10,15 +10,122 @@ const BOOKING_STORAGE_KEY = 'taxi_bookings_v1';
 @Injectable({ providedIn: 'root' })
 export class TaxiService {
 private readonly mockTaxis: Taxi[] = [
+  // ===== Chiang Mai =====
   {
     id: 1,
-    name: 'White Jaguar XF 2 Car',
+    name: 'Toyota Comfort CM-1',
+    brand: 'Toyota',
+    type: 'Sedan',
+    imageUrl: 'https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&w=800',
+    price: 950,
+    discountPercent: 10,
+    rating: 4.3,
+    seats: 4,
+    hasParking: true,
+    hasAC: true,
+    isNewCar: false,
+    nonStop: true,
+
+    country: 'Thailand',
+    from: 'Bangkok',
+    to: 'Chiang Mai',
+    departureDate: '2020-10-16',
+    departureTime: '08:00',
+  },
+  {
+    id: 2,
+    name: 'Honda City CM-2',
+    brand: 'Honda',
+    type: 'Sedan',
+    imageUrl: 'https://images.pexels.com/photos/112460/pexels-photo-112460.jpeg?auto=compress&w=800',
+    price: 1050,
+    discountPercent: 5,
+    rating: 4.6,
+    seats: 4,
+    hasParking: true,
+    hasAC: true,
+    isNewCar: true,
+    nonStop: true,
+
+    country: 'Thailand',
+    from: 'Bangkok',
+    to: 'Chiang Mai',
+    departureDate: '2020-10-16',
+    departureTime: '09:00',
+  },
+  {
+    id: 3,
+    name: 'Nissan Sunny CM-3',
+    brand: 'Nissan',
+    type: 'Sedan',
+    imageUrl: 'https://images.pexels.com/photos/358070/pexels-photo-358070.jpeg?auto=compress&w=800',
+    price: 890,
+    discountPercent: 0,
+    rating: 4.0,
+    seats: 4,
+    hasParking: true,
+    hasAC: false,
+    isNewCar: false,
+    nonStop: false,
+
+    country: 'Thailand',
+    from: 'Bangkok',
+    to: 'Chiang Mai',
+    departureDate: '2020-10-17',
+    departureTime: '08:30',
+  },
+  {
+    id: 4,
+    name: 'Mazda 3 CM-4',
+    brand: 'Mazda',
+    type: 'Sedan',
+    imageUrl: 'https://images.pexels.com/photos/1402787/pexels-photo-1402787.jpeg?auto=compress&w=800',
+    price: 1200,
+    discountPercent: 15,
+    rating: 4.8,
+    seats: 4,
+    hasParking: true,
+    hasAC: true,
+    isNewCar: true,
+    nonStop: true,
+
+    country: 'Thailand',
+    from: 'Bangkok',
+    to: 'Chiang Mai',
+    departureDate: '2020-10-17',
+    departureTime: '10:00',
+  },
+  {
+    id: 5,
+    name: 'Hyundai H1 CM-5',
+    brand: 'Hyundai',
+    type: 'Van',
+    imageUrl: 'https://images.pexels.com/photos/6898859/pexels-photo-6898859.jpeg?auto=compress&w=800',
+    price: 1500,
+    discountPercent: 20,
+    rating: 4.7,
+    seats: 6,
+    hasParking: true,
+    hasAC: true,
+    isNewCar: true,
+    nonStop: true,
+
+    country: 'Thailand',
+    from: 'Bangkok',
+    to: 'Chiang Mai',
+    departureDate: '2020-10-18',
+    departureTime: '09:30',
+  },
+
+  // ===== Phuket =====
+  {
+    id: 6,
+    name: 'White Jaguar XF Phuket-1',
     brand: 'Jaguar',
     type: 'Sedan',
-    imageUrl:
-      'https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&w=800',
-    price: 473,
-    discountPercent: 25,
+    imageUrl: 'https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&w=800',
+    price: 1600,
+    discountPercent: 10,
     rating: 4.9,
     seats: 4,
     hasParking: true,
@@ -26,42 +133,82 @@ private readonly mockTaxis: Taxi[] = [
     isNewCar: true,
     nonStop: true,
 
-    country: 'India',
-    from: 'Mumbai',
-    to: 'Goa',
+    country: 'Thailand',
+    from: 'Bangkok',
+    to: 'Phuket',
     departureDate: '2020-10-16',
-    departureTime: '03:00',
+    departureTime: '08:00',
   },
   {
-    id: 2,
-    name: 'Mercede, Rusell',
+    id: 7,
+    name: 'Mercedes C-Class Phuket-2',
     brand: 'Mercedes',
     type: 'Sedan',
-    imageUrl:
-      'https://images.pexels.com/photos/120049/pexels-photo-120049.jpeg?auto=compress&w=800',
-    price: 520,
+    imageUrl: 'https://images.pexels.com/photos/120049/pexels-photo-120049.jpeg?auto=compress&w=800',
+    price: 1800,
     discountPercent: 15,
-    rating: 4.8,
+    rating: 5.0,
     seats: 4,
+    hasParking: true,
+    hasAC: true,
+    isNewCar: true,
+    nonStop: true,
+
+    country: 'Thailand',
+    from: 'Bangkok',
+    to: 'Phuket',
+    departureDate: '2020-10-16',
+    departureTime: '10:00',
+  },
+  {
+    id: 8,
+    name: 'Toyota Innova Phuket-3',
+    brand: 'Toyota',
+    type: 'MPV',
+    imageUrl: 'https://images.pexels.com/photos/3861485/pexels-photo-3861485.jpeg?auto=compress&w=800',
+    price: 1300,
+    discountPercent: 5,
+    rating: 4.4,
+    seats: 6,
     hasParking: true,
     hasAC: true,
     isNewCar: false,
     nonStop: false,
 
-    country: 'India',
-    from: 'Mumbai',
-    to: 'Goa',
-    departureDate: '2020-10-16',
-    departureTime: '05:00',
+    country: 'Thailand',
+    from: 'Bangkok',
+    to: 'Phuket',
+    departureDate: '2020-10-17',
+    departureTime: '09:00',
   },
   {
-    id: 3,
-    name: 'Audi, dididi',
-    brand: 'Audi',
+    id: 9,
+    name: 'Honda Civic Phuket-4',
+    brand: 'Honda',
     type: 'Sedan',
-    imageUrl:
-      'https://images.pexels.com/photos/1402787/pexels-photo-1402787.jpeg?auto=compress&w=800',
-    price: 610,
+    imageUrl: 'https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&w=800',
+    price: 1400,
+    discountPercent: 0,
+    rating: 4.2,
+    seats: 4,
+    hasParking: true,
+    hasAC: true,
+    isNewCar: false,
+    nonStop: true,
+
+    country: 'Thailand',
+    from: 'Bangkok',
+    to: 'Phuket',
+    departureDate: '2020-10-17',
+    departureTime: '11:00',
+  },
+  {
+    id: 10,
+    name: 'BMW 5 Series Phuket-5',
+    brand: 'BMW',
+    type: 'Sedan',
+    imageUrl: 'https://images.pexels.com/photos/1402787/pexels-photo-1402787.jpeg?auto=compress&w=800',
+    price: 1900,
     discountPercent: 20,
     rating: 4.9,
     seats: 4,
@@ -70,12 +217,226 @@ private readonly mockTaxis: Taxi[] = [
     isNewCar: true,
     nonStop: true,
 
-    country: 'Japan',
-    from: 'Tokyo',
-    to: 'Osaka',
+    country: 'Thailand',
+    from: 'Bangkok',
+    to: 'Phuket',
+    departureDate: '2020-10-18',
+    departureTime: '09:30',
+  },
+
+  // ===== Khon Kaen =====
+  {
+    id: 11,
+    name: 'Toyota Vios KK-1',
+    brand: 'Toyota',
+    type: 'Sedan',
+    imageUrl: 'https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&w=800',
+    price: 800,
+    discountPercent: 0,
+    rating: 4.0,
+    seats: 4,
+    hasParking: true,
+    hasAC: false,
+    isNewCar: false,
+    nonStop: true,
+
+    country: 'Thailand',
+    from: 'Bangkok',
+    to: 'Khon Kaen',
     departureDate: '2020-10-16',
+    departureTime: '07:30',
+  },
+  {
+    id: 12,
+    name: 'Honda Jazz KK-2',
+    brand: 'Honda',
+    type: 'Hatchback',
+    imageUrl: 'https://images.pexels.com/photos/112460/pexels-photo-112460.jpeg?auto=compress&w=800',
+    price: 900,
+    discountPercent: 5,
+    rating: 4.3,
+    seats: 4,
+    hasParking: true,
+    hasAC: true,
+    isNewCar: true,
+    nonStop: true,
+
+    country: 'Thailand',
+    from: 'Bangkok',
+    to: 'Khon Kaen',
+    departureDate: '2020-10-16',
+    departureTime: '09:30',
+  },
+  {
+    id: 13,
+    name: 'Nissan NV KK-3',
+    brand: 'Nissan',
+    type: 'Van',
+    imageUrl: 'https://images.pexels.com/photos/6898859/pexels-photo-6898859.jpeg?auto=compress&w=800',
+    price: 1100,
+    discountPercent: 10,
+    rating: 4.1,
+    seats: 6,
+    hasParking: true,
+    hasAC: true,
+    isNewCar: false,
+    nonStop: false,
+
+    country: 'Thailand',
+    from: 'Bangkok',
+    to: 'Khon Kaen',
+    departureDate: '2020-10-17',
+    departureTime: '08:00',
+  },
+  {
+    id: 14,
+    name: 'Mazda CX-5 KK-4',
+    brand: 'Mazda',
+    type: 'SUV',
+    imageUrl: 'https://images.pexels.com/photos/358070/pexels-photo-358070.jpeg?auto=compress&w=800',
+    price: 1250,
+    discountPercent: 15,
+    rating: 4.6,
+    seats: 4,
+    hasParking: true,
+    hasAC: true,
+    isNewCar: true,
+    nonStop: true,
+
+    country: 'Thailand',
+    from: 'Bangkok',
+    to: 'Khon Kaen',
+    departureDate: '2020-10-17',
+    departureTime: '10:30',
+  },
+  {
+    id: 15,
+    name: 'Hyundai H1 KK-5',
+    brand: 'Hyundai',
+    type: 'Van',
+    imageUrl: 'https://images.pexels.com/photos/3861485/pexels-photo-3861485.jpeg?auto=compress&w=800',
+    price: 1350,
+    discountPercent: 20,
+    rating: 4.5,
+    seats: 6,
+    hasParking: true,
+    hasAC: true,
+    isNewCar: true,
+    nonStop: true,
+
+    country: 'Thailand',
+    from: 'Bangkok',
+    to: 'Khon Kaen',
+    departureDate: '2020-10-18',
     departureTime: '09:00',
   },
+
+  {
+    id: 16,
+    name: 'Budget Sedan CM-Budget',
+    brand: 'Toyota',
+    type: 'Sedan',
+    imageUrl: 'https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&w=800',
+    price: 700,
+    discountPercent: 0,
+    rating: 3.9,
+    seats: 4,
+    hasParking: true,
+    hasAC: false,
+    isNewCar: false,
+    nonStop: true,
+
+    country: 'Thailand',
+    from: 'Bangkok',
+    to: 'Chiang Mai',
+    departureDate: '2020-10-18',
+    departureTime: '07:00',
+  },
+  {
+    id: 17,
+    name: 'Premium Van Phuket-Premium',
+    brand: 'Mercedes',
+    type: 'Van',
+    imageUrl: 'https://images.pexels.com/photos/6898859/pexels-photo-6898859.jpeg?auto=compress&w=800',
+    price: 1950,
+    discountPercent: 25,
+    rating: 4.9,
+    seats: 6,
+    hasParking: true,
+    hasAC: true,
+    isNewCar: true,
+    nonStop: true,
+
+    country: 'Thailand',
+    from: 'Bangkok',
+    to: 'Phuket',
+    departureDate: '2020-10-18',
+    departureTime: '07:45',
+  },
+  {
+    id: 18,
+    name: 'Eco Hatchback KK-Eco',
+    brand: 'Honda',
+    type: 'Hatchback',
+    imageUrl: 'https://images.pexels.com/photos/112460/pexels-photo-112460.jpeg?auto=compress&w=800',
+    price: 650,
+    discountPercent: 0,
+    rating: 3.8,
+    seats: 4,
+    hasParking: true,
+    hasAC: false,
+    isNewCar: false,
+    nonStop: false,
+
+    country: 'Thailand',
+    from: 'Bangkok',
+    to: 'Khon Kaen',
+    departureDate: '2020-10-18',
+    departureTime: '06:30',
+  },
+  {
+    id: 19,
+    name: 'Standard Sedan Phuket-Std',
+    brand: 'Toyota',
+    type: 'Sedan',
+    imageUrl: 'https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&w=800',
+    price: 1250,
+    discountPercent: 0,
+    rating: 4.1,
+    seats: 4,
+    hasParking: true,
+    hasAC: true,
+    isNewCar: false,
+    nonStop: false,
+
+    country: 'Thailand',
+    from: 'Bangkok',
+    to: 'Phuket',
+    departureDate: '2020-10-17',
+    departureTime: '08:15',
+  },
+  {
+    id: 20,
+    name: 'Luxury SUV CM-Lux',
+    brand: 'BMW',
+    type: 'SUV',
+    imageUrl: 'https://images.pexels.com/photos/1402787/pexels-photo-1402787.jpeg?auto=compress&w=800',
+    price: 1800,
+    discountPercent: 10,
+    rating: 5.0,
+    seats: 4,
+    hasParking: true,
+    hasAC: true,
+    isNewCar: true,
+    nonStop: true,
+
+    country: 'Thailand',
+    from: 'Bangkok',
+    to: 'Chiang Mai',
+    departureDate: '2020-10-16',
+    departureTime: '11:30',
+  },
+  
 ];
 
 
@@ -88,22 +449,19 @@ private readonly mockTaxis: Taxi[] = [
 
   // ===== state: filter & sort =====
   readonly selectedSort = signal<'cheapest' | 'best' | 'quickest'>('cheapest');
+readonly filter = signal<TaxiFilter>({
+  minPrice: 0,
+  maxPrice: 2000,    
+  seat: 4,
+  category: 'Branded',
+  ac: false,
+  newCar: false,
+  nonStop: false,
+});
 
-  readonly filter = signal<TaxiFilter>({
-    minPrice: 0,
-    maxPrice: 800,
-    seat: 4,
-    category: 'Branded',
-    ac: false,
-    newCar: false,
-    nonStop: false,
-  });
-
-  // ===== state: bookings =====
   private readonly _bookings = signal<TaxiBooking[]>(this.safeLoadBookings());
   readonly bookings = this._bookings.asReadonly();
 
-  // ===== state: trip search (วัน–เวลา–เส้นทางที่ user เลือก) =====
   private readonly _tripSearch = signal<TripSearch | null>(null);
   readonly tripSearch = this._tripSearch.asReadonly();
 
@@ -122,8 +480,7 @@ private readonly mockTaxis: Taxi[] = [
     localStorage.setItem(BOOKING_STORAGE_KEY, JSON.stringify(this._bookings()));
   }
 
-  // ===== filtered taxis =====
- readonly filteredTaxis = computed(() => {
+readonly filteredTaxis = computed(() => {
   const taxis = this._allTaxis();
   const f = this.filter();
   const sort = this.selectedSort();
@@ -131,7 +488,7 @@ private readonly mockTaxis: Taxi[] = [
   const bookings = this._bookings();
 
   let result = taxis.filter(
-    (t) =>
+    t =>
       t.price >= f.minPrice &&
       t.price <= f.maxPrice &&
       (!f.seat || t.seats === f.seat) &&
@@ -140,61 +497,65 @@ private readonly mockTaxis: Taxi[] = [
       (!f.nonStop || t.nonStop)
   );
 
-  // ----- กรองตามประเทศ / วัน / เวลา / route จาก header -----
- if (trip) {
-  const tripCountry = (trip.country ?? 'All').toLowerCase();
+  if (trip) {
+    const tripCountry = (trip.country ?? 'All').toLowerCase();
 
-  result = result.filter((t) => {
-    const matchCountry =
-      tripCountry === 'all' ||
-      t.country.toLowerCase() === tripCountry;
+    result = result.filter(t => {
+      const matchCountry =
+        tripCountry === 'all' || t.country.toLowerCase() === tripCountry;
 
-    const matchFrom =
-      !trip.from ||                    // ถ้า trip.from = '' ตรงนี้จะ true ทุกคัน
-      t.from.toLowerCase() === trip.from.toLowerCase();
+      const matchFrom =
+        !trip.from || t.from.toLowerCase() === trip.from.toLowerCase();
 
-    const matchTo =
-      !trip.to ||
-      t.to.toLowerCase() === trip.to.toLowerCase();
+      const matchTo =
+        !trip.to || t.to.toLowerCase() === trip.to.toLowerCase();
 
-    const matchDate =
-      !trip.date || t.departureDate === trip.date;
+      const matchDate = !trip.date || t.departureDate === trip.date;
+      const matchTime = !trip.time || t.departureTime === trip.time;
 
-    const matchTime =
-      !trip.time || t.departureTime === trip.time;
+      return matchCountry && matchFrom && matchTo && matchDate && matchTime;
+    });
 
-    return matchCountry && matchFrom && matchTo && matchDate && matchTime;
-  });
+    const occupiedIds = bookings
+      .filter(
+        b =>
+          b.pickupDate === trip.date &&
+          b.pickupTime === trip.time &&
+          b.from.toLowerCase() === (trip.from ?? '').toLowerCase() &&
+          b.to.toLowerCase() === (trip.to ?? '').toLowerCase()
+      )
+      .map(b => b.taxiId);
 
-  const occupiedIds = bookings
-    .filter(
-      (b) =>
-        b.pickupDate === trip.date &&
-        b.pickupTime === trip.time &&
-        b.from.toLowerCase() === (trip.from ?? '').toLowerCase() &&
-        b.to.toLowerCase() === (trip.to ?? '').toLowerCase()
-    )
-    .map((b) => b.taxiId);
+    result = result.filter(t => !occupiedIds.includes(t.id));
+  }
 
-  result = result.filter((t) => !occupiedIds.includes(t.id));
-}
-
-
-  // ----- sort เหมือนเดิม -----
   if (sort === 'cheapest') {
     result = [...result].sort((a, b) => a.price - b.price);
   } else if (sort === 'best') {
-    result = [...result].sort((a, b) => b.rating - a.rating);
+    result = [...result].sort((a, b) => {
+      if (b.rating === a.rating) {
+        return Number(b.nonStop) - Number(a.nonStop);
+      }
+      return b.rating - a.rating;
+    });
   } else {
-    result = [...result].sort(
-      (a, b) => Number(b.nonStop) - Number(a.nonStop)
-    );
+    const toMinutes = (t: string) => {
+      const [h, m] = t.split(':').map(Number);
+      return h * 60 + m;
+    };
+
+    result = [...result].sort((a, b) => {
+      const timeDiff = toMinutes(a.departureTime) - toMinutes(b.departureTime);
+      if (timeDiff !== 0) {
+        return timeDiff;            
+      }
+      return Number(b.nonStop) - Number(a.nonStop); 
+    });
   }
 
   return result;
 });
 
-  // ===== public methods =====
   loadTaxis() {
     this.isLoading.set(true);
     this.error.set(null);
@@ -218,41 +579,85 @@ private readonly mockTaxis: Taxi[] = [
     this.selectedSort.set(sort);
   }
 
-  // ตั้งค่าทริปที่ user กดค้นหา (ใช้ในการกรอง)
   setTripSearch(trip: TripSearch | null) {
     this._tripSearch.set(trip);
   }
 
   createBooking(
-    taxi: Taxi,
-    payload: {
-      pickupDate: string;
-      pickupTime: string;
-      from: string;
-      to: string;
-    }
-  ): TaxiBooking {
-    const current = this._bookings();
-    const newBooking: TaxiBooking = {
-      id: current.length ? Math.max(...current.map((b) => b.id)) + 1 : 1,
-      taxiId: taxi.id,
-      taxiName: taxi.name,
-      price: taxi.price,
-      seats: taxi.seats,
-      pickupDate: payload.pickupDate,
-      pickupTime: payload.pickupTime,
-      from: payload.from,
-      to: payload.to,
-      createdAt: new Date().toISOString(),
-    };
-
-    this._bookings.set([...current, newBooking]);
-    this.saveBookingsToStorage();
-    return newBooking;
+  taxi: Taxi,
+  payload: {
+    pickupDate: string;
+    pickupTime: string;
+    from: string;
+    to: string;
   }
+): TaxiBooking {
+  const current = this._bookings();
+  const newBooking: TaxiBooking = {
+    id: current.length ? Math.max(...current.map((b) => b.id)) + 1 : 1,
+    taxiId: taxi.id,
+    taxiName: taxi.name,
+    price: taxi.price,
+    seats: taxi.seats,
+    pickupDate: payload.pickupDate,
+    pickupTime: payload.pickupTime,
+    from: payload.from,
+    to: payload.to,
+    createdAt: new Date().toISOString(),
+    status: 'active',           // 🆕 ใส่สถานะเริ่มต้น
+  };
+
+  this._bookings.set([...current, newBooking]);
+  this.saveBookingsToStorage();
+  return newBooking;
+}
 
   clearAllBookings() {
     this._bookings.set([]);
     this.saveBookingsToStorage();
   }
+  private getPickupDateTime(b: TaxiBooking): Date {
+  // รูปแบบ '2020-10-16T08:00:00'
+  return new Date(`${b.pickupDate}T${b.pickupTime}:00`);
+}
+canCancelBooking(b: TaxiBooking): boolean {
+  if (b.status !== 'active') return false;
+
+  const pickup = this.getPickupDateTime(b);
+  const now = new Date();
+
+  const diffMs = pickup.getTime() - now.getTime();
+  const twoHoursMs = 2 * 60 * 60 * 1000;
+
+  return diffMs > twoHoursMs;   // true = เหลือมากกว่า 2 ชม.
+}
+cancelBooking(id: number): { ok: boolean; reason?: string } {
+  const list = this._bookings();
+  const idx = list.findIndex((b) => b.id === id);
+  if (idx === -1) {
+    return { ok: false, reason: 'Booking not found' };
+  }
+
+  const booking = list[idx];
+
+  if (!this.canCancelBooking(booking)) {
+    return { ok: false, reason: 'Cannot cancel less than 2 hours before pickup or already cancelled.' };
+  }
+
+  const updated: TaxiBooking = {
+    ...booking,
+    status: 'cancelled',
+    cancelledAt: new Date().toISOString(),
+  };
+
+  const newList = [...list];
+  newList[idx] = updated;
+
+  this._bookings.set(newList);
+  this.saveBookingsToStorage();
+
+  return { ok: true };
+}
+
+
 }

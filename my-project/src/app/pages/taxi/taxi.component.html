@@ -54,73 +54,81 @@
         <div
           class="flex-1 bg-white/10 rounded-2xl px-4 py-3 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 text-xs md:text-sm"
         >
-          <!-- TYPE -->
-          <div class="flex flex-col text-white/70">
-            <span class="uppercase text-[10px] tracking-wide">Type</span>
-            <select
-              class="mt-1 bg-transparent text-white font-medium text-xs md:text-sm border border-white/20 rounded-lg px-2 py-1 focus:outline-none"
-              [(ngModel)]="tripType"
-            >
-              <option class="text-slate-800" value="Outstation One-way">
-                Outstation One-way
-              </option>
-              <option class="text-slate-800" value="Outstation Round-trip">
-                Outstation Round-trip
-              </option>
-              <option class="text-slate-800" value="Local">Local</option>
-            </select>
-          </div>
-
-          <!-- FROM -->
-          <!-- <div class="flex flex-col text-white/70">
-        <span class="uppercase text-[10px] tracking-wide">From</span>
-        <input
-          type="text"
-          class="mt-1 bg-transparent text-white font-medium text-xs md:text-sm border border-white/20 rounded-lg px-2 py-1 focus:outline-none placeholder-white/50"
-          [(ngModel)]="fromCity"
-          placeholder="From city"
-        />
-      </div> -->
-          <!-- COUNTRY -->
-          <!-- COUNTRY -->
+          <!-- COUNTRY (Thailand อย่างเดียว) -->
           <div class="flex flex-col text-white/70">
             <span class="uppercase text-[10px] tracking-wide">Country</span>
             <select
               class="mt-1 bg-transparent text-white font-medium text-xs md:text-sm border border-white/20 rounded-lg px-2 py-1 focus:outline-none"
               [(ngModel)]="selectedCountry"
+              (ngModelChange)="onCountryChange($event)"
             >
-              <option class="text-slate-800" value="All">All</option>
-              <option class="text-slate-800" value="India">India</option>
-              <option class="text-slate-800" value="Japan">Japan</option>
               <option class="text-slate-800" value="Thailand">Thailand</option>
             </select>
           </div>
-
-          <!-- TO -->
+          <!-- FROM: กรุงเทพฯ อย่างเดียว -->
+          <div class="flex flex-col text-white/70">
+            <span class="uppercase text-[10px] tracking-wide">From</span>
+            <select
+              class="mt-1 bg-transparent text-white font-medium text-xs md:text-sm border border-white/20 rounded-lg px-2 py-1 focus:outline-none"
+              [(ngModel)]="fromCity"
+              (ngModelChange)="onFromChange($event)"
+            >
+              <option class="text-slate-800" [ngValue]="''" disabled>
+                Select from
+              </option>
+              <option class="text-slate-800" value="Bangkok">Bangkok</option>
+            </select>
+          </div>
+          <!-- TO: จังหวัดในไทย 3 ที่ -->
           <div class="flex flex-col text-white/70">
             <span class="uppercase text-[10px] tracking-wide">To</span>
-            <input
-              type="text"
-              class="mt-1 bg-transparent text-white font-medium text-xs md:text-sm border border-white/20 rounded-lg px-2 py-1 focus:outline-none placeholder-white/50"
+            <select
+              class="mt-1 bg-transparent text-white font-medium text-xs md:text-sm border border-white/20 rounded-lg px-2 py-1 focus:outline-none"
               [(ngModel)]="toCity"
-              placeholder="To city"
-            />
+              (ngModelChange)="onToChange($event)"
+            >
+              <option class="text-slate-800" [ngValue]="''" disabled>
+                Select city
+              </option>
+              <option class="text-slate-800" value="Chiang Mai">
+                Chiang Mai
+              </option>
+              <option class="text-slate-800" value="Phuket">Phuket</option>
+              <option class="text-slate-800" value="Khon Kaen">
+                Khon Kaen
+              </option>
+            </select>
           </div>
 
-          <!-- PICK-UP DATE -->
+          <!-- PICK-UP DATE: dropdown เฉพาะวันที่ที่มีเที่ยว -->
           <div class="flex flex-col text-white/70">
             <span class="uppercase text-[10px] tracking-wide"
               >Pick-up date</span
             >
-            <input
-              type="date"
-              class="mt-1 bg-transparent text-white font-medium text-xs md:text-sm border border-white/20 rounded-lg px-2 py-1 focus:outline-none [color-scheme:dark]"
+            <select
+              class="mt-1 bg-transparent text-white font-medium text-xs md:text-sm border border-white/20 rounded-lg px-2 py-1 focus:outline-none"
               [(ngModel)]="pickupDate"
-            />
+            >
+              <option class="text-slate-800" [ngValue]="''" disabled>
+                Select date
+              </option>
+              <option
+                *ngFor="let d of availableDates"
+                class="text-slate-800"
+                [ngValue]="d"
+              >
+                {{ d }}
+              </option>
+            </select>
+            <p
+              *ngIf="availableDates.length === 0 && toCity"
+              class="mt-1 text-[10px] text-red-200"
+            >
+              No trips for this route.
+            </p>
           </div>
 
-          <!-- PICK-UP TIME -->
-          <!-- PICK-UP TIME -->
+          <!-- PICK-UP TIME: dropdown เฉพาะเวลาที่มีเที่ยว -->
           <div class="flex flex-col text-white/70">
             <span class="uppercase text-[10px] tracking-wide"
               >Pick-up time</span
@@ -130,10 +138,9 @@
               class="mt-1 bg-transparent text-white font-medium text-xs md:text-sm border border-white/20 rounded-lg px-2 py-1 focus:outline-none"
               [(ngModel)]="pickupTime"
             >
-              <option class="text-slate-800" [ngValue]="''" disabled selected>
+              <option class="text-slate-800" [ngValue]="''" disabled>
                 Select time
               </option>
-
               <option
                 *ngFor="let t of availableTimes"
                 class="text-slate-800"
@@ -144,10 +151,10 @@
             </select>
 
             <p
-              *ngIf="availableTimes.length === 0"
+              *ngIf="pickupDate && availableTimes.length === 0"
               class="mt-1 text-[10px] text-red-200"
             >
-              No trips for this date / route.
+              No trips for this date.
             </p>
           </div>
 
@@ -162,10 +169,15 @@
           </div>
         </div>
 
+        <!-- ขวาสุด: โปรไฟล์ เหมือนเดิม -->
         <div class="hidden md:flex items-center gap-3 text-sm ml-auto">
-          <button class="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20">
-            Become a Partner
+          <button
+            class="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20"
+            (click)="openBookingPanel()"
+          >
+            Booking History
           </button>
+
           <div class="flex items-center gap-2">
             <div class="w-8 h-8 rounded-full bg-white/20"></div>
             <span>Mansurul Haque</span>
@@ -174,11 +186,101 @@
       </div>
     </header>
 
+    <!-- BOOKING HISTORY PANEL -->
+    <div
+      *ngIf="selectedTaxi"
+      class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50"
+    >
+      <div class="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-semibold text-slate-800">
+            {{ selectedTaxi?.name }}
+          </h2>
+          <button
+            class="text-slate-500 hover:text-slate-800 text-xl leading-none"
+            (click)="closeDetails()"
+            aria-label="Close details"
+          >
+            ×
+          </button>
+        </div>
+
+        <!-- Image -->
+        <div class="mb-4">
+          <img
+            [src]="selectedTaxi?.imageUrl"
+            [alt]="selectedTaxi?.name"
+            class="w-full h-40 object-cover rounded-xl"
+          />
+        </div>
+
+        <!-- Info -->
+        <div class="space-y-1 text-sm text-slate-700">
+          <p><b>Brand:</b> {{ selectedTaxi?.brand }}</p>
+          <p><b>Type:</b> {{ selectedTaxi?.type }}</p>
+          <p><b>Seats:</b> {{ selectedTaxi?.seats }}</p>
+          <p><b>Price:</b> ${{ selectedTaxi?.price }}</p>
+          <p><b>AC:</b> {{ selectedTaxi?.hasAC ? "Yes" : "No" }}</p>
+          <p><b>Non stop:</b> {{ selectedTaxi?.nonStop ? "Yes" : "No" }}</p>
+
+          <!-- route + date/time -->
+          <p class="pt-2 text-slate-600 text-xs">
+            {{ selectedTaxi?.from }} → {{ selectedTaxi?.to }} |
+            {{ selectedTaxi?.departureDate }} {{ selectedTaxi?.departureTime }}
+          </p>
+        </div>
+
+        <!-- Footer button -->
+        <div class="mt-4 flex justify-end gap-2">
+          <button
+            class="px-4 py-2 rounded-full border border-slate-200 text-xs font-medium text-slate-600 hover:bg-slate-50"
+            (click)="closeDetails()"
+          >
+            Close
+          </button>
+          <button
+            class="px-4 py-2 rounded-full bg-blue-600 text-white text-xs font-semibold shadow hover:bg-blue-700"
+            (click)="onBookNow(selectedTaxi!)"
+          >
+            Book This Taxi
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- CONTENT AREA -->
     <section class="flex-1 px-4 lg:px-10 py-6 flex flex-col lg:flex-row gap-6">
       <!-- LEFT LIST -->
       <div class="flex-1 space-y-4">
         <!-- Header row: Taxi + tabs -->
+
+        <!-- Pagination -->
+        <div
+          *ngIf="totalPages() > 1"
+          class="flex justify-end items-center gap-2 mt-4 text-xs md:text-sm"
+        >
+          <button
+            class="px-3 py-1 rounded-full border border-slate-300 text-slate-600 disabled:opacity-40"
+            (click)="prevPage()"
+            [disabled]="currentPage() === 1"
+          >
+            ‹ Prev
+          </button>
+
+          <span class="px-2">
+            Page {{ currentPage() }} / {{ totalPages() }}
+          </span>
+
+          <button
+            class="px-3 py-1 rounded-full border border-slate-300 text-slate-600 disabled:opacity-40"
+            (click)="nextPage()"
+            [disabled]="currentPage() === totalPages()"
+          >
+            Next ›
+          </button>
+        </div>
+
         <div
           class="bg-white rounded-2xl shadow-sm px-5 py-3 flex flex-wrap items-center gap-4"
         >
@@ -232,7 +334,7 @@
 
         <!-- Taxi cards -->
         <div
-          *ngFor="let taxi of taxis()"
+          *ngFor="let taxi of pagedTaxis()"
           class="bg-white rounded-2xl shadow-sm flex flex-col md:flex-row gap-4 px-5 py-4 items-center"
         >
           <!-- car image -->
@@ -303,6 +405,7 @@
               >
                 View Details
               </button>
+
               <button
                 class="px-4 py-2 bg-blue-600 text-white rounded-full text-xs font-semibold shadow hover:bg-blue-700"
                 (click)="onBookNow(taxi)"
@@ -338,7 +441,7 @@
             <input
               type="range"
               min="0"
-              max="800"
+              max="2000"
               step="10"
               [value]="filter().minPrice"
               (input)="onChangePriceRange($event, 'minPrice')"
@@ -347,7 +450,7 @@
             <input
               type="range"
               min="0"
-              max="800"
+              max="2000"
               step="10"
               [value]="filter().maxPrice"
               (input)="onChangePriceRange($event, 'maxPrice')"

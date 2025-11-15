@@ -1,19 +1,21 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { TaxiService } from '../../service/taxi.service';
 import { NgFor, NgIf, CurrencyPipe, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
-import { Taxi } from '../../model/taxi-booking';
+import { Taxi, TaxiBooking } from '../../model/taxi-booking';
 
 @Component({
   selector: 'app-taxi',
   standalone: false,
   templateUrl: './taxi.component.html',
-  styleUrl: './taxi.component.css'
+  styleUrl: './taxi.component.css',
 })
 export class TaxiComponent implements OnInit {
   private readonly taxiSvc = inject(TaxiService);
-  selectedCountry = 'All';
+  showBookingPanel = false;
+  selectedCountry = 'Thailand';
+  selectedTaxi: Taxi | null = null;
 
   readonly taxis = this.taxiSvc.filteredTaxis;
   readonly isLoading = this.taxiSvc.isLoading;
@@ -22,115 +24,210 @@ export class TaxiComponent implements OnInit {
   readonly selectedSort = this.taxiSvc.selectedSort;
   readonly bookings = this.taxiSvc.bookings;
 
-  // header state
-  tripType = 'Outstation One-way';
-  fromCity = '';
-  toCity = 'Goa';
-  pickupDate = '2020-10-16';
-  pickupTime = 'D';
+  // ===== HEADER STATE =====
+  fromCity = 'Bangkok'; // fix route: Bangkok -> [Chiang Mai / Phuket / Khon Kaen]
+  toCity = '';
+  pickupDate = '';
+  pickupTime = '';
 
-get availableTimes(): string[] {
-  const taxis = this.taxiSvc.allTaxis();
-  const country = this.selectedCountry;
-  const to = this.toCity.trim().toLowerCase();
-  const date = this.pickupDate;
+  // ===== PAGINATION =====
+  readonly pageSize = 5;
+  readonly currentPage = signal(1);
 
-  const filtered = taxis.filter(t =>
-    (country === 'All' || t.country === country) &&
-    (!to || t.to.toLowerCase() === to) &&
-    (!date || t.departureDate === date)
+  readonly pagedTaxis = computed(() => {
+    const all = this.taxis(); // หลัง filter + search แล้ว
+    const start = (this.currentPage() - 1) * this.pageSize;
+    return all.slice(start, start + this.pageSize);
+  });
+
+  readonly totalPages = computed(() =>
+    Math.max(1, Math.ceil(this.taxis().length / this.pageSize))
   );
 
-  const unique = Array.from(new Set(filtered.map(t => t.departureTime)));
-  return unique.sort();
-}
-
-  readonly totalText = computed(
-    () => `Total ${this.taxis().length} result`
-  );
+  readonly totalText = computed(() => `Total ${this.taxis().length} result`);
 
   ngOnInit(): void {
-    this.taxiSvc.loadTaxis();
+    this.taxiSvc.loadTaxis(); // เริ่มต้น: แสดงทั้งหมด (tripSearch = null)
   }
 
-onSearchTrip() {
-  if (!this.pickupDate || !this.toCity) {
+  // ========= helper =========
+  private resetPage() {
+    this.currentPage.set(1);
+  }
+
+  goToPage(page: number) {
+    const p = Math.min(Math.max(1, page), this.totalPages());
+    this.currentPage.set(p);
+  }
+
+  nextPage() {
+    this.goToPage(this.currentPage() + 1);
+  }
+
+  prevPage() {
+    this.goToPage(this.currentPage() - 1);
+  }
+  onViewDetails(taxi: Taxi) {
+    this.selectedTaxi = taxi;
+  }
+
+  closeDetails() {
+    this.selectedTaxi = null;
+  }
+  // ========= dropdown route =========
+  onCountryChange(country: string) {
+    this.selectedCountry = country;
+    this.pickupDate = '';
+    this.pickupTime = '';
+    this.resetPage();
+  }
+
+  onFromChange(from: string) {
+    this.fromCity = from;
+    this.pickupDate = '';
+    this.pickupTime = '';
+    this.resetPage();
+  }
+
+  onToChange(to: string) {
+    this.toCity = to;
+    this.pickupDate = '';
+    this.pickupTime = '';
+    this.resetPage();
+  }
+  openBookingPanel() {
+    this.showBookingPanel = true;
+  }
+
+  closeBookingPanel() {
+    this.showBookingPanel = false;
+  }
+
+  // helper เรียกใช้จาก template
+  canCancel(b: TaxiBooking): boolean {
+    return this.taxiSvc.canCancelBooking(b);
+  }
+
+  onCancelBooking(b: TaxiBooking) {
+    const res = this.taxiSvc.cancelBooking(b.id);
+
+    if (!res.ok) {
+      Swal.fire({
+        title: 'Cannot cancel',
+        text: res.reason ?? 'Booking cannot be cancelled.',
+        icon: 'error',
+      });
+      return;
+    }
+
     Swal.fire({
-      title: 'Missing information',
-      text: 'Please select date and destination city first.',
-      icon: 'warning',
+      title: 'Cancelled',
+      text: `Booking #${b.id} has been cancelled.`,
+      icon: 'success',
     });
-    return;
+  }
+  get availableDates(): string[] {
+    const taxis: Taxi[] = this.taxiSvc.allTaxis();
+    const country = this.selectedCountry;
+    const from = this.fromCity.trim().toLowerCase();
+    const to = this.toCity.trim().toLowerCase();
+
+    const filtered = taxis.filter(
+      (t) =>
+        (!country || t.country === country) &&
+        (!from || t.from.toLowerCase() === from) &&
+        (!to || t.to.toLowerCase() === to)
+    );
+
+    const unique = Array.from(new Set(filtered.map((t) => t.departureDate)));
+    return unique.sort();
   }
 
-  if (!this.pickupTime) {
+  get availableTimes(): string[] {
+    const taxis: Taxi[] = this.taxiSvc.allTaxis();
+    const country = this.selectedCountry;
+    const from = this.fromCity.trim().toLowerCase();
+    const to = this.toCity.trim().toLowerCase();
+    const date = this.pickupDate;
+
+    const filtered = taxis.filter(
+      (t) =>
+        (!country || t.country === country) &&
+        (!from || t.from.toLowerCase() === from) &&
+        (!to || t.to.toLowerCase() === to) &&
+        (!date || t.departureDate === date)
+    );
+
+    const unique = Array.from(new Set(filtered.map((t) => t.departureTime)));
+    return unique.sort();
+  }
+
+
+  onSearchTrip() {
+    if (
+      !this.selectedCountry ||
+      !this.fromCity ||
+      !this.toCity ||
+      !this.pickupDate ||
+      !this.pickupTime
+    ) {
+      Swal.fire({
+        title: 'Missing information',
+        text: 'Please select country, from, destination, date and time.',
+        icon: 'warning',
+      });
+      return;
+    }
+
+    this.taxiSvc.setTripSearch({
+      date: this.pickupDate,
+      time: this.pickupTime,
+      from: this.fromCity,
+      to: this.toCity,
+      country: this.selectedCountry,
+    });
+
+    this.resetPage();
+
     Swal.fire({
-      title: 'Missing time',
-      text: 'Please select an available time from the list.',
-      icon: 'warning',
+      title: 'Trips filtered',
+      text: `Showing taxis from Bangkok to ${this.toCity} on ${this.pickupDate} at ${this.pickupTime}.`,
+      icon: 'info',
+      timer: 1500,
+      showConfirmButton: false,
     });
-    return;
   }
 
-  this.taxiSvc.setTripSearch({
-    date: this.pickupDate,
-    time: this.pickupTime,
-    from: this.fromCity,
-    to: this.toCity,
-    country: this.selectedCountry || 'All',
-  });
 
-  Swal.fire({
-    title: 'Trips filtered',
-    text: `Showing taxis available on ${this.pickupDate} at ${this.pickupTime}.`,
-    icon: 'info',
-    timer: 1500,
-    showConfirmButton: false,
-  });
-}
   onChangeSeat(seat: any) {
     const value =
-      seat === null || seat === '' || seat === undefined ? undefined : Number(seat);
+      seat === null || seat === '' || seat === undefined
+        ? undefined
+        : Number(seat);
     this.taxiSvc.updateFilter({ seat: value });
+    this.resetPage();
   }
 
   onChangeCategory(category: string) {
     this.taxiSvc.updateFilter({ category: category as any });
+    this.resetPage();
   }
 
   toggleFilterFlag(key: 'ac' | 'newCar' | 'nonStop') {
     const current = this.filter()[key];
     this.taxiSvc.updateFilter({ [key]: !current } as any);
+    this.resetPage();
   }
 
   onChangePriceRange(event: Event, edge: 'minPrice' | 'maxPrice') {
     const value = Number((event.target as HTMLInputElement).value);
     this.taxiSvc.updateFilter({ [edge]: value });
+    this.resetPage();
   }
 
   setSort(sort: 'cheapest' | 'best' | 'quickest') {
     this.taxiSvc.setSort(sort);
-  }
-
-  // --------- View Details & Book Now ใช้เหมือนเดิม ---------
-  onViewDetails(taxi: any) {
-    Swal.fire({
-      title: taxi.name,
-      html: `
-        <div style="text-align:left;font-size:14px;">
-          <p><b>Brand:</b> ${taxi.brand}</p>
-          <p><b>Type:</b> ${taxi.type}</p>
-          <p><b>Seats:</b> ${taxi.seats}</p>
-          <p><b>Price:</b> $${taxi.price}</p>
-          <p><b>AC:</b> ${taxi.hasAC ? 'Yes' : 'No'}</p>
-          <p><b>Non stop:</b> ${taxi.nonStop ? 'Yes' : 'No'}</p>
-        </div>
-      `,
-      imageUrl: taxi.imageUrl,
-      imageWidth: 400,
-      imageAlt: taxi.name,
-      confirmButtonText: 'Close',
-    });
+    this.resetPage();
   }
 
   async onBookNow(taxi: any) {
@@ -168,34 +265,10 @@ onSearchTrip() {
   }
 
   onOpenBookingHistory() {
-    const list = this.bookings();
-    if (!list.length) {
-      Swal.fire({
-        title: 'No bookings yet',
-        text: 'Try booking a taxi first.',
-        icon: 'info',
-      });
-      return;
-    }
+    this.showBookingPanel = true;
+  }
 
-    const html = list
-      .map(
-        (b) => `
-        <div style="margin-bottom:8px;border-bottom:1px solid #eee;padding-bottom:6px;">
-          <div><b>#${b.id}</b> - ${b.taxiName}</div>
-          <div style="font-size:12px;">
-            ${b.from} → ${b.to} | ${b.pickupDate} ${b.pickupTime} | $${b.price}
-          </div>
-        </div>
-      `
-      )
-      .join('');
-
-    Swal.fire({
-      title: 'My bookings',
-      html,
-      width: 500,
-      confirmButtonText: 'Close',
-    });
+  onCloseBookingPanel() {
+    this.showBookingPanel = false;
   }
 }

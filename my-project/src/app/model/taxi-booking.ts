@@ -32,13 +32,13 @@ export interface TaxiBooking {
   taxiName: string;
   price: number;
   seats: number;
-
-  pickupDate: string;  // YYYY-MM-DD
-  pickupTime: string;  // HH:mm
+  pickupDate: string;   // 'YYYY-MM-DD'
+  pickupTime: string;   // 'HH:mm'
   from: string;
   to: string;
-
-  createdAt: string;   // ISO
+  createdAt: string;    // ISO string
+  status: 'active' | 'cancelled';
+  cancelledAt?: string;
 }
 
 /** เงื่อนไขค้นหาเที่ยว (วันที่ + เวลา + route) */
@@ -50,22 +50,6 @@ export interface TripSearch {
   country?: string;
 }
 
-export interface Taxi {
-  id: number;
-  name: string;
-  brand: string;
-  type: string;
-  imageUrl: string;
-  price: number;
-  discountPercent?: number;
-  rating: number;
-  seats: number;
-  hasParking: boolean;
-  hasAC: boolean;
-  isNewCar: boolean;
-  nonStop: boolean;
-  country: string;  // ← เพิ่มประเทศ
-}
 export interface Taxi {
   id: number;
   name: string;
