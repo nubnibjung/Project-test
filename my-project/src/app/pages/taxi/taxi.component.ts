@@ -23,6 +23,7 @@ export class TaxiComponent implements OnInit {
   readonly filter = this.taxiSvc.filter;
   readonly selectedSort = this.taxiSvc.selectedSort;
   readonly bookings = this.taxiSvc.bookings;
+  readonly brands = this.taxiSvc.brands;
 
   // ===== HEADER STATE =====
   fromCity = 'Bangkok'; // fix route: Bangkok -> [Chiang Mai / Phuket / Khon Kaen]
@@ -143,24 +144,60 @@ export class TaxiComponent implements OnInit {
     return unique.sort();
   }
 
-  get availableTimes(): string[] {
-    const taxis: Taxi[] = this.taxiSvc.allTaxis();
-    const country = this.selectedCountry;
-    const from = this.fromCity.trim().toLowerCase();
-    const to = this.toCity.trim().toLowerCase();
-    const date = this.pickupDate;
+get availableTimes(): string[] {
+  // 1) ข้อมูลดิบ
+  const taxis: Taxi[] = this.taxiSvc.allTaxis();
+  const f = this.filter();          // signal -> ดึงค่าปัจจุบันของ filter
+  const bookings = this.bookings(); // signal -> list booking ปัจจุบัน
 
-    const filtered = taxis.filter(
-      (t) =>
-        (!country || t.country === country) &&
-        (!from || t.from.toLowerCase() === from) &&
-        (!to || t.to.toLowerCase() === to) &&
-        (!date || t.departureDate === date)
+  const country = this.selectedCountry;
+  const from = this.fromCity.trim().toLowerCase();
+  const to = this.toCity.trim().toLowerCase();
+  const date = this.pickupDate;
+
+  // 2) filter ตาม route + filter panel (seat/brand/AC/... ทั้งหมด)
+  const filtered = taxis.filter(t =>
+    (!country || t.country === country) &&
+    (!from || t.from.toLowerCase() === from) &&
+    (!to   || t.to.toLowerCase()   === to) &&
+    (!date || t.departureDate === date) &&
+
+    // filter จาก sidebar
+    t.price >= f.minPrice &&
+    t.price <= f.maxPrice &&
+    (!f.seat     || t.seats === f.seat) &&
+    (!f.ac       || t.hasAC) &&
+    (!f.newCar   || t.isNewCar) &&
+    (!f.nonStop  || t.nonStop) &&
+    (!f.brand    || f.brand === 'All' || t.brand === f.brand)
+  );
+
+  // 3) booking ที่ชน route + date เดียวกัน (ไว้เช็กว่ารถเต็มหรือยัง)
+  const bookingsSameRouteDate = bookings.filter(b =>
+    (!date || b.pickupDate === date) &&
+    b.from.toLowerCase() === from &&
+    b.to.toLowerCase()   === to &&
+    b.status === 'active'
+  );
+
+  // 4) รวมเวลาเฉพาะที่ยังมี "รถอย่างน้อย 1 คันที่ไม่ถูกจอง"
+  const timesSet = new Set<string>();
+
+  for (const taxi of filtered) {
+    const time = taxi.departureTime;
+
+    const isBookedThisTaxiAtTime = bookingsSameRouteDate.some(
+      b => b.taxiId === taxi.id && b.pickupTime === time
     );
 
-    const unique = Array.from(new Set(filtered.map((t) => t.departureTime)));
-    return unique.sort();
+    if (!isBookedThisTaxiAtTime) {
+      timesSet.add(time); // มีรถว่างในเวลานี้อย่างน้อย 1 คัน
+    }
   }
+
+  // 5) sort เวลาแล้วส่งกลับ
+  return Array.from(timesSet).sort();
+}
 
 
   onSearchTrip() {
@@ -208,9 +245,12 @@ export class TaxiComponent implements OnInit {
     this.resetPage();
   }
 
-  onChangeCategory(category: string) {
-    this.taxiSvc.updateFilter({ category: category as any });
-    this.resetPage();
+    onChangeBrand(brand: string) {
+    if (brand === 'All' || !brand) {
+      this.taxiSvc.updateFilter({ brand: null });
+    } else {
+      this.taxiSvc.updateFilter({ brand });
+    }
   }
 
   toggleFilterFlag(key: 'ac' | 'newCar' | 'nonStop') {

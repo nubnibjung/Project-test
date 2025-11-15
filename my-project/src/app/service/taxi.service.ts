@@ -13,7 +13,7 @@ private readonly mockTaxis: Taxi[] = [
   // ===== Chiang Mai =====
   {
     id: 1,
-    name: 'Toyota Comfort CM-1',
+    name: 'Toyota Corolla ',
     brand: 'Toyota',
     type: 'Sedan',
     imageUrl: 'https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&w=800',
@@ -34,7 +34,7 @@ private readonly mockTaxis: Taxi[] = [
   },
   {
     id: 2,
-    name: 'Honda City CM-2',
+    name: 'Honda Civic',
     brand: 'Honda',
     type: 'Sedan',
     imageUrl: 'https://images.pexels.com/photos/112460/pexels-photo-112460.jpeg?auto=compress&w=800',
@@ -55,7 +55,7 @@ private readonly mockTaxis: Taxi[] = [
   },
   {
     id: 3,
-    name: 'Nissan Sunny CM-3',
+    name: 'Nissan Skyline',
     brand: 'Nissan',
     type: 'Sedan',
     imageUrl: 'https://images.pexels.com/photos/358070/pexels-photo-358070.jpeg?auto=compress&w=800',
@@ -76,7 +76,7 @@ private readonly mockTaxis: Taxi[] = [
   },
   {
     id: 4,
-    name: 'Mazda 3 CM-4',
+    name: 'Mazda CX-5',
     brand: 'Mazda',
     type: 'Sedan',
     imageUrl: 'https://images.pexels.com/photos/1402787/pexels-photo-1402787.jpeg?auto=compress&w=800',
@@ -97,7 +97,7 @@ private readonly mockTaxis: Taxi[] = [
   },
   {
     id: 5,
-    name: 'Hyundai H1 CM-5',
+    name: 'Hyundai H1 ',
     brand: 'Hyundai',
     type: 'Van',
     imageUrl: 'https://images.pexels.com/photos/6898859/pexels-photo-6898859.jpeg?auto=compress&w=800',
@@ -120,8 +120,8 @@ private readonly mockTaxis: Taxi[] = [
   // ===== Phuket =====
   {
     id: 6,
-    name: 'White Jaguar XF Phuket-1',
-    brand: 'Jaguar',
+    name: 'Mercedes C-Class ',
+    brand: 'Mercedes',
     type: 'Sedan',
     imageUrl: 'https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&w=800',
     price: 1600,
@@ -141,7 +141,7 @@ private readonly mockTaxis: Taxi[] = [
   },
   {
     id: 7,
-    name: 'Mercedes C-Class Phuket-2',
+    name: 'Mercedes Benz S-Class ',
     brand: 'Mercedes',
     type: 'Sedan',
     imageUrl: 'https://images.pexels.com/photos/120049/pexels-photo-120049.jpeg?auto=compress&w=800',
@@ -162,7 +162,7 @@ private readonly mockTaxis: Taxi[] = [
   },
   {
     id: 8,
-    name: 'Toyota Innova Phuket-3',
+    name: 'Toyota Innova ',
     brand: 'Toyota',
     type: 'MPV',
     imageUrl: 'https://images.pexels.com/photos/3861485/pexels-photo-3861485.jpeg?auto=compress&w=800',
@@ -183,8 +183,8 @@ private readonly mockTaxis: Taxi[] = [
   },
   {
     id: 9,
-    name: 'Honda Civic Phuket-4',
-    brand: 'Honda',
+    name: 'Lexus LS',
+    brand: 'Lexus',
     type: 'Sedan',
     imageUrl: 'https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&w=800',
     price: 1400,
@@ -204,7 +204,7 @@ private readonly mockTaxis: Taxi[] = [
   },
   {
     id: 10,
-    name: 'BMW 5 Series Phuket-5',
+    name: 'BMW 5 Series ',
     brand: 'BMW',
     type: 'Sedan',
     imageUrl: 'https://images.pexels.com/photos/1402787/pexels-photo-1402787.jpeg?auto=compress&w=800',
@@ -227,7 +227,7 @@ private readonly mockTaxis: Taxi[] = [
   // ===== Khon Kaen =====
   {
     id: 11,
-    name: 'Toyota Vios KK-1',
+    name: 'Toyota Camry',
     brand: 'Toyota',
     type: 'Sedan',
     imageUrl: 'https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&w=800',
@@ -248,7 +248,7 @@ private readonly mockTaxis: Taxi[] = [
   },
   {
     id: 12,
-    name: 'Honda Jazz KK-2',
+    name: 'Honda Jazz',
     brand: 'Honda',
     type: 'Hatchback',
     imageUrl: 'https://images.pexels.com/photos/112460/pexels-photo-112460.jpeg?auto=compress&w=800',
@@ -269,9 +269,9 @@ private readonly mockTaxis: Taxi[] = [
   },
   {
     id: 13,
-    name: 'Nissan NV KK-3',
+    name: 'Nissan Teana',
     brand: 'Nissan',
-    type: 'Van',
+    type: 'Sedan',
     imageUrl: 'https://images.pexels.com/photos/6898859/pexels-photo-6898859.jpeg?auto=compress&w=800',
     price: 1100,
     discountPercent: 10,
@@ -290,7 +290,7 @@ private readonly mockTaxis: Taxi[] = [
   },
   {
     id: 14,
-    name: 'Mazda CX-5 KK-4',
+    name: 'Mazda CX-5 ',
     brand: 'Mazda',
     type: 'SUV',
     imageUrl: 'https://images.pexels.com/photos/358070/pexels-photo-358070.jpeg?auto=compress&w=800',
@@ -311,7 +311,7 @@ private readonly mockTaxis: Taxi[] = [
   },
   {
     id: 15,
-    name: 'Hyundai H1 KK-5',
+    name: 'Hyundai H1 ',
     brand: 'Hyundai',
     type: 'Van',
     imageUrl: 'https://images.pexels.com/photos/3861485/pexels-photo-3861485.jpeg?auto=compress&w=800',
@@ -333,7 +333,7 @@ private readonly mockTaxis: Taxi[] = [
 
   {
     id: 16,
-    name: 'Budget Sedan CM-Budget',
+    name: 'Toyota vios',
     brand: 'Toyota',
     type: 'Sedan',
     imageUrl: 'https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&w=800',
@@ -354,8 +354,8 @@ private readonly mockTaxis: Taxi[] = [
   },
   {
     id: 17,
-    name: 'Premium Van Phuket-Premium',
-    brand: 'Mercedes',
+    name: 'Toyota Alpard ',
+    brand: 'Toyota',
     type: 'Van',
     imageUrl: 'https://images.pexels.com/photos/6898859/pexels-photo-6898859.jpeg?auto=compress&w=800',
     price: 1950,
@@ -375,10 +375,10 @@ private readonly mockTaxis: Taxi[] = [
   },
   {
     id: 18,
-    name: 'Eco Hatchback KK-Eco',
+    name: 'Honda City ',
     brand: 'Honda',
     type: 'Hatchback',
-    imageUrl: 'https://images.pexels.com/photos/112460/pexels-photo-112460.jpeg?auto=compress&w=800',
+    imageUrl: 'https://images.pexels.com/photos/358070/pexels-photo-358070.jpeg',
     price: 650,
     discountPercent: 0,
     rating: 3.8,
@@ -396,8 +396,8 @@ private readonly mockTaxis: Taxi[] = [
   },
   {
     id: 19,
-    name: 'Standard Sedan Phuket-Std',
-    brand: 'Toyota',
+    name: 'Volvo S80',
+    brand: 'Volvo',
     type: 'Sedan',
     imageUrl: 'https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&w=800',
     price: 1250,
@@ -417,7 +417,7 @@ private readonly mockTaxis: Taxi[] = [
   },
   {
     id: 20,
-    name: 'Luxury SUV CM-Lux',
+    name: 'BMW X7',
     brand: 'BMW',
     type: 'SUV',
     imageUrl: 'https://images.pexels.com/photos/1402787/pexels-photo-1402787.jpeg?auto=compress&w=800',
@@ -449,15 +449,21 @@ private readonly mockTaxis: Taxi[] = [
 
   // ===== state: filter & sort =====
   readonly selectedSort = signal<'cheapest' | 'best' | 'quickest'>('cheapest');
-readonly filter = signal<TaxiFilter>({
-  minPrice: 0,
-  maxPrice: 2000,    
-  seat: 4,
-  category: 'Branded',
-  ac: false,
-  newCar: false,
-  nonStop: false,
-});
+  readonly filter = signal<TaxiFilter>({
+    minPrice: 0,
+    maxPrice: 2000,    
+    seat: 4,
+    brand: null,
+    ac: false,
+    newCar: false,
+    nonStop: false,
+  });
+
+    readonly brands = computed(() => {
+    const taxis = this._allTaxis();
+    const unique = Array.from(new Set(taxis.map(t => t.brand))).sort();
+    return ['All', ...unique];
+  });
 
   private readonly _bookings = signal<TaxiBooking[]>(this.safeLoadBookings());
   readonly bookings = this._bookings.asReadonly();
@@ -475,7 +481,7 @@ readonly filter = signal<TaxiFilter>({
       return [];
     }
   }
-
+  
   private saveBookingsToStorage() {
     localStorage.setItem(BOOKING_STORAGE_KEY, JSON.stringify(this._bookings()));
   }

@@ -1,3 +1,4 @@
+// ========== Taxi main model ==========
 export interface Taxi {
   id: number;
   name: string;
@@ -12,19 +13,28 @@ export interface Taxi {
   hasAC: boolean;
   isNewCar: boolean;
   nonStop: boolean;
+
+  // ข้อมูลเส้นทาง/เที่ยว
+  country: string;        // เช่น 'Thailand'
+  from: string;           // เมืองต้นทาง
+  to: string;             // เมืองปลายทาง
+  departureDate: string;  // 'YYYY-MM-DD'
+  departureTime: string;  // 'HH:mm'
 }
 
-export type TaxiCategory = 'All' | 'Branded' | 'Non-branded';
+// ========== Filter model (ใช้กับ sidebar) ==========
 
 export interface TaxiFilter {
   minPrice: number;
   maxPrice: number;
   seat?: number;
-  category: TaxiCategory;
-  ac: boolean;
-  newCar: boolean;
-  nonStop: boolean;
+  brand?: string | null;  // 👈 ใช้ brand สำหรับ dropdown
+  ac?: boolean;
+  newCar?: boolean;
+  nonStop?: boolean;
 }
+
+// ========== Booking model ==========
 
 export interface TaxiBooking {
   id: number;
@@ -41,32 +51,12 @@ export interface TaxiBooking {
   cancelledAt?: string;
 }
 
-/** เงื่อนไขค้นหาเที่ยว (วันที่ + เวลา + route) */
+// ========== Search condition (แบบ form ด้านบน) ==========
+
 export interface TripSearch {
-  date: string;
-  time: string;
+  date: string;   // 'YYYY-MM-DD'
+  time: string;   // 'HH:mm'
   from: string;
   to: string;
   country?: string;
-}
-
-export interface Taxi {
-  id: number;
-  name: string;
-  brand: string;
-  type: string;
-  imageUrl: string;
-  price: number;
-  discountPercent?: number;
-  rating: number;
-  seats: number;
-  hasParking: boolean;
-  hasAC: boolean;
-  isNewCar: boolean;
-  nonStop: boolean;
-  country: string;        
-  from: string;         
-  to: string;           
-  departureDate: string;  
-  departureTime: string;  
 }
