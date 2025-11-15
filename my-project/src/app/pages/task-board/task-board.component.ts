@@ -22,14 +22,47 @@ export class TaskBoardComponent {
   editProgressPercent = 0;
   editStatus: TaskStatus = 'todo';
 
- 
+  isCreateOpen = false;
+  createTitle = '';
+  createDescription = '';
+
  private readonly svc = inject(TaskBoardService);
   readonly columns = this.svc.columns;
   readonly totalTasks = this.svc.totalTasks;
 
   // ใช้ทำ progress dots 12 จุด
   readonly progressDots = Array.from({ length: 12 });
+   openCreateModal() {
+    this.isCreateOpen = true;
+    this.createTitle = '';
+    this.createDescription = '';
+  }
 
+  closeCreateModal() {
+    this.isCreateOpen = false;
+  }
+
+  saveCreateModal() {
+    const title = this.createTitle.trim();
+    const description = this.createDescription.trim();
+
+    if (!title) {
+      Swal.fire('Title required', '', 'warning');
+      return;
+    }
+
+    // default เพิ่มลงคอลัมน์ Todo
+    this.svc.addTask('todo', title, description);
+
+    Swal.fire('Created!', 'Task created successfully.', 'success');
+
+    this.closeCreateModal();
+  }
+
+  /** ปุ่ม Create task เดิม ถ้าอยากใช้ต่อ */
+  onCreateTaskMain() {
+    this.openCreateModal();
+  }
   getTasks(col: TaskStatus) {
     return this.svc.getTasksByStatus(col);
   }
@@ -57,12 +90,6 @@ export class TaskBoardComponent {
       this.svc.addTask(col, formValues.title, formValues.desc);
       Swal.fire('Added!', 'Task created successfully.', 'success');
     }
-  }
-
-  /** ปุ่ม Create task ด้านขวาบน */
-  onCreateTaskMain() {
-    // ให้ไปเพิ่มในคอลัมน์ Todo list เป็น default
-    this.onAddTask('todo');
   }
 
   /** ดับเบิลคลิก / คลิกที่การ์ดเพื่อแก้ข้อมูล */
@@ -114,52 +141,6 @@ export class TaskBoardComponent {
   this.closeEditModal();
 }
 
-  async onAdjustTaskMeta(task: TaskCard, event: MouseEvent) {
-    event.stopPropagation(); 
-
-    const currentPercent = task.progressPercent ?? 0;
-    const tagsString = task.tags?.join(', ') ?? '';
-
-    const { value: formValues } = await Swal.fire({
-      title: 'ปรับ Progress / ประเภทงาน',
-      html: `
-        <div style="text-align:left; font-size:12px; margin-bottom:4px;">Progress (%)</div>
-        <input id="swal-progress" type="range" min="0" max="100" step="10"
-               class="swal2-range" value="${currentPercent}">
-        <div style="text-align:left; font-size:12px; margin-top:10px;">ประเภทงาน (คั่นด้วย , )</div>
-        <input id="swal-tags" class="swal2-input" placeholder="#website, #client" value="${tagsString}">
-      `,
-      focusConfirm: false,
-      preConfirm: () => {
-        const progressInput = document.getElementById('swal-progress') as HTMLInputElement;
-        const tagsInput = document.getElementById('swal-tags') as HTMLInputElement;
-
-        const percent = Number(progressInput.value) || 0;
-
-        const tags =
-          tagsInput.value
-            .split(',')
-            .map(t => t.trim())
-            .filter(t => t.length > 0);
-
-        // แปลง % เป็นจำนวนจุด (0–12)
-        const progressDots = Math.round((percent / 100) * 12);
-
-        return {
-          progressPercent: percent,
-          progress: progressDots,
-          tags,
-        };
-      },
-      confirmButtonText: 'Save',
-      showCancelButton: true,
-    });
-
-    if (formValues) {
-      this.svc.updateTaskMeta(task.id, formValues);
-      Swal.fire('Updated!', 'Progress & ประเภทงานถูกแก้ไขแล้ว.', 'success');
-    }
-  }
 
   /** ปุ่มลบการ์ด */
   async onDeleteTask(task: TaskCard, event: MouseEvent) {

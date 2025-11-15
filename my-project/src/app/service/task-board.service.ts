@@ -46,7 +46,7 @@ export class TaskBoardService {
         description: 'Search inspirations for new finance product Mino project.',
         tags: ['#website', '#client'],
         status: 'todo',
-        time: 'Progress',
+        time: this.formatCreatedTime(),
         comments: 12,
         attachments: 8,
         people: ['BS', 'AJ', 'LK'],
@@ -266,5 +266,5 @@ addTask(status: TaskStatus, title: string, description: string) {
     );
     this.saveToStorage();
   }
-
+  
 }

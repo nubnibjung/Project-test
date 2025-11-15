@@ -1,7 +1,7 @@
-<div class="min-h-screen bg-gradient-to-br from-white via-[#f8fbff] to-[#fef6ff]">
-  <div
-    class="w-full h-screen flex overflow-hidden"
-  >
+<div
+  class="min-h-screen bg-gradient-to-br from-white via-[#f8fbff] to-[#fef6ff]"
+>
+  <div class="w-full h-screen flex overflow-hidden">
     <!-- SIDEBAR -->
     <aside
       class="w-64 bg-gradient-to-b from-[#f3e3ff] via-[#f7f0ff] to-[#ffeef2] border-r border-white/60 flex flex-col"
@@ -23,8 +23,7 @@
           <button
             class="w-full flex items-center gap-3 px-3 py-2 rounded-2xl bg-white text-indigo-600 font-medium shadow-sm"
           >
-            <span class="text-lg">
-              <i class="bi bi-check2"></i> </span
+            <span class="text-lg"> <i class="bi bi-check2"></i> </span
             ><span class="text-xs">Tasks</span>
             <span
               class="ml-auto text-[10px] bg-indigo-500 text-white rounded-full px-2 py-0.5"
@@ -34,8 +33,7 @@
           <button
             class="mt-1 w-full flex items-center gap-3 px-3 py-2 rounded-2xl hover:bg-white/60"
           >
-            <span class="text-lg">
-              <i class="bi bi-lightning-fill"></i> </span
+            <span class="text-lg"> <i class="bi bi-lightning-fill"></i> </span
             ><span class="text-xs">Activities</span>
           </button>
         </div>
@@ -47,36 +45,28 @@
           <button
             class="w-full flex items-center gap-3 px-3 py-2 rounded-2xl hover:bg-white/60"
           >
-            <span>
-              <i class="bi bi-speedometer2"></i> </span
+            <span> <i class="bi bi-speedometer2"></i> </span
             ><span>Dashboard</span>
           </button>
           <button
             class="w-full flex items-center gap-3 px-3 py-2 rounded-2xl hover:bg-white/60"
           >
-            <span>
-              <i class="bi bi-calendar3"></i> </span
-            ><span>Schedule</span>
+            <span> <i class="bi bi-calendar3"></i> </span><span>Schedule</span>
           </button>
           <button
             class="w-full flex items-center gap-3 px-3 py-2 rounded-2xl hover:bg-white/60"
           >
-            <span>
-              <i class="bi bi-journal-text"></i> </span
-            ><span>Note</span>
+            <span> <i class="bi bi-journal-text"></i> </span><span>Note</span>
           </button>
           <button
             class="w-full flex items-center gap-3 px-3 py-2 rounded-2xl hover:bg-white/60"
           >
-            <span>
-              <i class="bi bi-bag-fill"></i> </span
-            ><span>Products</span>
+            <span> <i class="bi bi-bag-fill"></i> </span><span>Products</span>
           </button>
           <button
             class="w-full flex items-center gap-3 px-3 py-2 rounded-2xl hover:bg-white/60"
           >
-            <span>
-              <i class="bi bi-bar-chart-fill"></i> </span
+            <span> <i class="bi bi-bar-chart-fill"></i> </span
             ><span>Report</span>
           </button>
         </div>
@@ -88,15 +78,12 @@
           <button
             class="w-full flex items-center gap-3 px-3 py-2 rounded-2xl hover:bg-white/60"
           >
-            <span>
-              <i class="bi bi-people-fill"></i> </span
-            ><span>Team</span>
+            <span> <i class="bi bi-people-fill"></i> </span><span>Team</span>
           </button>
           <button
             class="w-full flex items-center gap-3 px-3 py-2 rounded-2xl hover:bg-white/60"
           >
-            <span>
-              <i class="bi bi-briefcase-fill"></i> </span
+            <span> <i class="bi bi-briefcase-fill"></i> </span
             ><span>Clients</span>
           </button>
         </div>
@@ -108,15 +95,12 @@
           <button
             class="w-full flex items-center gap-3 px-3 py-2 rounded-2xl hover:bg-white/60"
           >
-            <span>
-              <i class="bi bi-gear-fill"></i> </span
-            ><span>Settings</span>
+            <span> <i class="bi bi-gear-fill"></i> </span><span>Settings</span>
           </button>
           <button
             class="w-full flex items-center gap-3 px-3 py-2 rounded-2xl hover:bg-white/60"
           >
-            <span>
-              <i class="bi bi-life-preserver"></i> </span
+            <span> <i class="bi bi-life-preserver"></i> </span
             ><span>Support</span>
           </button>
         </div>
@@ -206,6 +190,7 @@
           </button>
           <button
             class="inline-flex items-center gap-2 text-[11px] px-4 py-2 rounded-2xl bg-slate-900 text-white shadow-md"
+            (click)="openCreateModal()"
           >
             <span>＋</span><span>Create task</span>
           </button>
@@ -235,15 +220,15 @@
             </div>
 
             <div
-              class="space-y-3 overflow-y-auto pr-1"
-              style="max-height: calc(100vh - 230px)"
+              class="space-y-3 pr-1 no-scrollbar"
+              style="max-height: calc(100vh - 230px); overflow-y: auto"
             >
               <article
                 *ngFor="let card of getTasks(col.id)"
                 class="rounded-2xl bg-gradient-to-br p-3 text-[11px] shadow-[0_10px_30px_rgba(15,23,42,0.10)] cursor-pointer hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(15,23,42,0.18)] transition"
                 [ngClass]="card.bg"
-                (click)="openEditModal(card)">
-
+                (click)="openEditModal(card)"
+              >
                 <!-- tags + delete -->
                 <div class="flex items-start justify-between mb-2">
                   <div class="flex flex-wrap gap-1">
@@ -274,12 +259,6 @@
                 <div class="flex items-center justify-between mb-1">
                   <div class="flex items-center gap-1">
                     <span class="text-[10px] text-slate-600">Progress</span>
-                    <button
-                      class="text-[9px] text-slate-500 underline"
-                      (click)="onAdjustTaskMeta(card, $event)"
-                    >
-                      Edit
-                    </button>
                   </div>
                   <span class="text-[10px] font-medium text-slate-700">
                     {{ card.progressPercent || 0 }}%
@@ -323,11 +302,19 @@
 </div>
 
 <!-- EDIT MODAL -->
-<div *ngIf="isEditOpen" class="fixed inset-0 z-50 bg-black/30 flex items-center justify-center">
+<div
+  *ngIf="isEditOpen"
+  class="fixed inset-0 z-50 bg-black/30 flex items-center justify-center"
+>
   <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-sm font-semibold text-slate-900">Edit task</h2>
-      <button class="text-slate-400 hover:text-slate-600" (click)="closeEditModal()">✕</button>
+      <button
+        class="text-slate-400 hover:text-slate-600"
+        (click)="closeEditModal()"
+      >
+        ✕
+      </button>
     </div>
 
     <div class="space-y-3 text-xs">
@@ -337,7 +324,8 @@
         <input
           type="text"
           class="w-full border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300"
-          [(ngModel)]="editTitle" />
+          [(ngModel)]="editTitle"
+        />
       </div>
 
       <!-- Description -->
@@ -346,7 +334,8 @@
         <textarea
           rows="3"
           class="w-full border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300"
-          [(ngModel)]="editDescription"></textarea>
+          [(ngModel)]="editDescription"
+        ></textarea>
       </div>
 
       <!-- Tags -->
@@ -356,7 +345,8 @@
           type="text"
           class="w-full border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300"
           placeholder="#website, #client"
-          [(ngModel)]="editTags" />
+          [(ngModel)]="editTags"
+        />
       </div>
 
       <!-- Progress + Status -->
@@ -368,14 +358,16 @@
             min="0"
             max="100"
             class="w-full border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300"
-            [(ngModel)]="editProgressPercent" />
+            [(ngModel)]="editProgressPercent"
+          />
         </div>
 
         <div>
           <label class="block mb-1 text-slate-600">Status</label>
           <select
             class="w-full border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300 bg-white"
-            [(ngModel)]="editStatus">
+            [(ngModel)]="editStatus"
+          >
             <option value="todo">Todo / New</option>
             <option value="in-progress">In Progress</option>
             <option value="review">In Review</option>
@@ -388,13 +380,70 @@
     <div class="mt-5 flex justify-end gap-2 text-xs">
       <button
         class="px-3 py-1.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50"
-        (click)="closeEditModal()">
+        (click)="closeEditModal()"
+      >
         Cancel
       </button>
       <button
         class="px-4 py-1.5 rounded-xl bg-slate-900 text-white hover:bg-slate-800"
-        (click)="saveEditModal()">
+        (click)="saveEditModal()"
+      >
         Save
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- CREATE MODAL -->
+<div
+  *ngIf="isCreateOpen"
+  class="fixed inset-0 z-50 bg-black/30 flex items-center justify-center"
+>
+  <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-sm font-semibold text-slate-900">Create task</h2>
+      <button
+        class="text-slate-400 hover:text-slate-600"
+        (click)="closeCreateModal()"
+      >
+        ✕
+      </button>
+    </div>
+
+    <div class="space-y-3 text-xs">
+      <!-- Title -->
+      <div>
+        <label class="block mb-1 text-slate-600">Title</label>
+        <input
+          type="text"
+          class="w-full border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300"
+          [(ngModel)]="createTitle"
+        />
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label class="block mb-1 text-slate-600">Description</label>
+        <textarea
+          rows="3"
+          class="w-full border border-slate-200 rounded-xl px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300"
+          [(ngModel)]="createDescription"
+        ></textarea>
+      </div>
+    </div>
+
+    <div class="mt-5 flex justify-end gap-2 text-xs">
+      <button
+        class="px-3 py-1.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50"
+        (click)="closeCreateModal()"
+      >
+        Cancel
+      </button>
+      <button
+        class="px-4 py-1.5 rounded-xl bg-slate-900 text-white hover:bg-slate-800"
+        (click)="saveCreateModal()"
+      >
+        Create
       </button>
     </div>
   </div>
